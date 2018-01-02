@@ -2,6 +2,11 @@
 
 object Main extends App {
   import org.kleemann.snakepuzzle._
-  println("Hello, world!")
-  println(snake.mkString("\n"))
+  var i = 1
+  allSolutions.foreach { s =>
+    println("solution #"+i)
+    println(s.toString)
+    println
+    i = i + 1
+  }
 }

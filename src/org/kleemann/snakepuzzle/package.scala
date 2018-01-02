@@ -18,7 +18,9 @@ package object snakepuzzle {
    * Positive z moves toward the viewer
    * This is a right-handed coordinate system with a rotation
    */
-  case class Coordinate(x: Int, y: Int, z:Int)
+  case class Coordinate(x: Int, y: Int, z:Int) {
+      override def toString: String = "(%2d,%2d,%2d)".format(x,y,z)
+  }
   
   /** 
    *  One of the 6 right angle direction that can be traveled in 3d space 
@@ -30,21 +32,27 @@ package object snakepuzzle {
   object Direction {
     object Left extends Direction {
       override def move(c: Coordinate): Coordinate = Coordinate(c.x-1, c.y, c.z)
+      override def toString: String = "Left"
     }
     object Right extends Direction {
       override def move(c: Coordinate): Coordinate = Coordinate(c.x+1, c.y, c.z)
+      override def toString: String = "Right"
     }
     object Up extends Direction {
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y+1, c.z)
+      override def toString: String = "Up"
     }
     object Down extends Direction {
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y-1, c.z)
+      override def toString: String = "Down"
     }
     object In extends Direction {
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z+1)
+      override def toString: String = "In"
     }
     object Out extends Direction {
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z-1)      
+      override def toString: String = "Out"
     }
   }
   import Direction._
@@ -57,7 +65,7 @@ package object snakepuzzle {
   
   object Block {
     object Straight extends Block {
-      override val toString = "Straight"
+      override val toString = "Straight  "
     }
     object RightAngle extends Block {
       override val toString = "RightAngle"
@@ -73,33 +81,35 @@ package object snakepuzzle {
     /**
      * Given a block in space, find the coordinate and direction of the connecting block(s)
      */
-    def next: List[(Coordinate, Direction)] =
+    def next(newBlock: Block): List[Choice] =
       d match {
       case Left | Right => b match {
-        case Straight => List((d.move(c), d))
+        case Straight => List(Choice(newBlock, d.move(c), d))
         case RightAngle => List(
-          (Up.move(c), Up),
-          (Down.move(c), Down),
-          (In.move(c), In),
-          (Out.move(c), Out))
+          Choice(newBlock, Up.move(c), Up),
+          Choice(newBlock, Down.move(c), Down),
+          Choice(newBlock, In.move(c), In),
+          Choice(newBlock, Out.move(c), Out))
       }
       case Up | Down => b match {
-        case Straight => List((d.move(c), d))
+        case Straight => List(Choice(newBlock, d.move(c), d))
         case RightAngle => List(
-          (Left.move(c), Left),
-          (Right.move(c), Right),
-          (In.move(c), In),
-          (Out.move(c), Out))
+          Choice(newBlock, Left.move(c), Left),
+          Choice(newBlock, Right.move(c), Right),
+          Choice(newBlock, In.move(c), In),
+          Choice(newBlock, Out.move(c), Out))
       }
       case In | Out => b match {
-        case Straight => List((d.move(c), d))
+        case Straight => List(Choice(newBlock, d.move(c), d))
         case RightAngle => List(
-          (Left.move(c), Left),
-          (Right.move(c), Right),
-          (Up.move(c), Up),
-          (Down.move(c), Down))
+          Choice(newBlock, Left.move(c), Left),
+          Choice(newBlock, Right.move(c), Right),
+          Choice(newBlock, Up.move(c), Up),
+          Choice(newBlock, Down.move(c), Down))
       }
     }
+
+    override def toString: String = "%10s %s %s".format(b, c, d)
   }
 
     /**
@@ -157,40 +167,8 @@ package object snakepuzzle {
      * Given a new block type, return zero or more partial solutions 
      */
     def next(b: Block): List[Solution] = {
-      val cs.head.next
-      
-      val newChoice = Choice(b, cs.head.c, cs.head.d)
-      
-      
-      // TODO: make sure the choice is adjacent to the last choice
-      // and has consistent direction
-      // Maybe we don't need to calculate the choice?
-      ch.d match {
-      case Left | Right => ch.b match {
-        case Straight => testLegalMove(  List((d.move(c), d))
-        case RightAngle => List(
-          (Up.move(c), Up),
-          (Down.move(c), Down),
-          (In.move(c), In),
-          (Out.move(c), Out))
-      }
-      case Up | Down => b match {
-        case Straight => List((d.move(c), d))
-        case RightAngle => List(
-          (Left.move(c), Left),
-          (Right.move(c), Right),
-          (In.move(c), In),
-          (Out.move(c), Out))
-      }
-      case In | Out => b match {
-        case Straight => List((d.move(c), d))
-        case RightAngle => List(
-          (Left.move(c), Left),
-          (Right.move(c), Right),
-          (Up.move(c), Up),
-          (Down.move(c), Down))
-      }
-    }
+      // TODO: a lot is going on here; maybe explain it
+      cs.head.next(b).map{ testLegalMove(_) }.flatten
     }
       
     /**
@@ -220,6 +198,8 @@ package object snakepuzzle {
         
       }
     }
+
+    override def toString: String = cs.reverse.mkString("\n")
   }
 
   object Solution {
@@ -230,62 +210,46 @@ package object snakepuzzle {
   }
     
 
-  
-    /**
-     * The recursive depth first search of all arangements of the snake
-     * 
-     * currentSolution is built backwards; the first move is the final element of the list
-     */
-    def step(
-      /**
-       * A sublist of snake. These are the remaining snake blocks that have yet to be used
-       */
-      remainingSnake: List[Block],
-      
-      /**
-       * A list of the twists of the snake needed to get to the current state.
-       * The first move taken is the last element of this list. 
-       * These elements are in the opposite order of snake and remainingSnake.
-       */
-      currentSolution: List[Direction],
-
-      /**
-       * These are the coordinates occupied by currentSolution.
-       * These could be recalculated every step but it's more efficient to build it as we grow.
-       * Each element of this list matches up with each element in currentSolution.  
-       */
-      usedCoordinates: List[Coordinate],
-      
-      /**
-       * If we've reached the end of remainingSnake and the problem is solved then the solution is placed here
-       */
-      successes: List[List[Direction]]
-  
-      /**
-       * Returns all successes of this sub-branch
-       */
-        ): List[List[Direction]] = {
-    
-    if (remainingSnake == Nil) currentSolution :: successes
-    else {
-      val lastCoord = usedCoordinates.head
-      val candidates = connectingBlocks(
-      remainingSnake.head match {
-        Straight => {
-          val newCoord = currentSolution.head
-        }
-        RightAngle => {
-          
-        }
-      }
-    }
-  }
 
   /**
    * All solutions including duplicate rotated and symmetrical solutions
    */
-  val allSolutions: List[List[Direction]] = {
+  val allSolutions: List[Solution] = {
+
+    /**
+     * The recursive depth first search of all arrangements of the snake
+     * 
+     * currentSolution is built backwards; the first move is the final element of the list
+     */
+    def recurse(
+        /**
+         * A sublist of snake. These are the remaining snake blocks that have yet to be used
+         */
+        remainingSnake: List[Block],
+
+        /**
+         * The current partial solution that we are working on
+         */
+        currentSolution: Solution,
+
+        /**
+         * If we've reached the end of remainingSnake and the problem is solved then the solution is placed here
+         */
+        solutions: List[Solution]
+
+        /**
+         * Returns all successes of this sub-branch
+         */
+          ): List[Solution] = {
+
+      if (remainingSnake == Nil) currentSolution :: solutions
+      else {
+        val ss = currentSolution.next(remainingSnake.head)
+        ss.flatMap{recurse(remainingSnake.tail, _, solutions)}
+      }
+    }
+
     // We need to choose an arbitrary initial coordinate and initial direction so we have to perform the first step.
-    step(snake.tail, List(Right), List(Coordinate(0,0,0)), Nil)  
+    recurse(snake.tail, Solution.first(Choice(snake.head, Coordinate(0,0,0), In)), Nil)
   }
 }
