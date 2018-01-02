@@ -197,11 +197,10 @@ package object snakepuzzle {
     /**
      * Given a new block type, return zero or more partial solutions
      */
-    def next(b: Block): List[Solution] = {
+    def next(b: Block): List[Solution] =
       pbs.head.next(b). // get all possible ways that the next block could be placed
         map{ testLegalMove(_) }. // test each of the new placements for legality
           flatten // Remove moves that were not legal
-    }
 
     /**
      * Attempts to add PlacedBlock to the Solution and see if it makes a legal move
