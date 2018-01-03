@@ -34,32 +34,42 @@ package object snakepuzzle {
    */
   trait Direction {
     def move(c: Coordinate): Coordinate
+    def rightAngle: List[Direction]
   }
 
   object Direction {
+    private def xAxisRightAngle = List[Direction](Up,Down,In,Out)
     object Left extends Direction {
+      override val toString = "Left"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x-1, c.y, c.z)
-      override def toString: String = "Left"
+      override def rightAngle = xAxisRightAngle
     }
     object Right extends Direction {
+      override val toString = "Right"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x+1, c.y, c.z)
-      override def toString: String = "Right"
+      override def rightAngle = xAxisRightAngle
     }
+    private val yAxisRightAngle = List[Direction](Left,Right,In,Out)
     object Up extends Direction {
+      override val toString = "Up"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y+1, c.z)
-      override def toString: String = "Up"
+      override def rightAngle = yAxisRightAngle
     }
     object Down extends Direction {
+      override val toString = "Down"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y-1, c.z)
-      override def toString: String = "Down"
+      override def rightAngle = yAxisRightAngle
     }
+    private val zAxisRightAngle = List[Direction](Left,Right,Up,Down)
     object In extends Direction {
+      override val toString = "In"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z+1)
-      override def toString: String = "In"
+      override def rightAngle = zAxisRightAngle
     }
     object Out extends Direction {
+      override val toString = "Out"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z-1)
-      override def toString: String = "Out"
+      override def rightAngle = zAxisRightAngle
     }
   }
   import Direction._
@@ -121,27 +131,11 @@ package object snakepuzzle {
   case class PlacedBlock(b: Block, c: Coordinate, d: Direction) {
     /**
      * Given a block in space, find the coordinate and direction
-     * of all possible placements of following blocks.
+     * of all possible placements of the following block.
      */
     def next(newBlock: Block): List[PlacedBlock] = b match {
       case Straight => List(PlacedBlock(newBlock, d.move(c), d))
-      case RightAngle => d match {
-        case Left | Right => List(
-          PlacedBlock(newBlock, Up.move(c), Up),
-          PlacedBlock(newBlock, Down.move(c), Down),
-          PlacedBlock(newBlock, In.move(c), In),
-          PlacedBlock(newBlock, Out.move(c), Out))
-        case Up | Down => List(
-          PlacedBlock(newBlock, Left.move(c), Left),
-          PlacedBlock(newBlock, Right.move(c), Right),
-          PlacedBlock(newBlock, In.move(c), In),
-          PlacedBlock(newBlock, Out.move(c), Out))
-        case In | Out => List(
-          PlacedBlock(newBlock, Left.move(c), Left),
-          PlacedBlock(newBlock, Right.move(c), Right),
-          PlacedBlock(newBlock, Up.move(c), Up),
-          PlacedBlock(newBlock, Down.move(c), Down))
-      }
+      case RightAngle => d.rightAngle.map{ d2 => PlacedBlock(newBlock, d2.move(c), d2) }
     }
 
     override def toString: String = "%10s %s %s".format(b, c, d)
@@ -226,7 +220,8 @@ package object snakepuzzle {
     def firstPlacement(pb: PlacedBlock): Solution = Solution(List(pb), CubeExtent.firstPlacement(pb.c), Set(pb.c))
   }
 
-
+  // arbitrary first placement
+  val FIRST_PLACEMENT = PlacedBlock(snake.head, Coordinate.origin, In)
 
   /**
    * All legal solutions including duplicate rotated and symmetrical solutions
@@ -264,7 +259,13 @@ package object snakepuzzle {
       }
     }
 
-    val pb = PlacedBlock(snake.head, Coordinate.origin, In) // arbitrary first placement
-    recurse(snake.tail, Solution.firstPlacement(pb), Nil)
+    recurse(snake.tail, Solution.firstPlacement(FIRST_PLACEMENT), Nil)
   }
+
+  /**
+   * Prune solutions that are the same shape but rotated
+   */
+  //val noDuplicateSolutions: List[Solution] = {
+
+  //}
 }
