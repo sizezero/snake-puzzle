@@ -221,7 +221,7 @@ package object snakepuzzle {
 
   object Solution {
     /**
-  	 * It's not possible to make an illegal choice in the first move
+     * It's not possible to make an illegal choice in the first move
      */
     def firstPlacement(pb: PlacedBlock): Solution = Solution(List(pb), CubeExtent.firstPlacement(pb.c), Set(pb.c))
   }
