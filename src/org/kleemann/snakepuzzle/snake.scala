@@ -9,6 +9,8 @@ package org.kleemann
  */
 package object snakepuzzle {
 
+  import scala.annotation.tailrec
+
   /**
    * Represents a coordinate in 3D space.
    *
@@ -234,30 +236,16 @@ package object snakepuzzle {
    * 2) All blocks must fit into a cube of size 3
    */
   case class Solution private (
-
-      /**
-       * A list of block placements from most recent to oldest
-       */
-      pbs: List[PlacedBlock],
-
-      /**
-       * cache the extent of the shape of previously placed blocks
-       */
-      extent: CubeExtent,
-
-      /**
-       * cache the Coordinates of all previously placed blocks
-       * for efficiency and ease
-       */
-      occupiedCoordinates: Set[Coordinate]) {
+      pbs: List[PlacedBlock], // A list of block placements from most recent to oldest
+      extent: CubeExtent, // cache the extent of the shape of previously placed blocks
+      occupiedCoordinates: Set[Coordinate]) { // cached coordinates of previous placed blocks
 
     /**
      * Given a new block type, return zero or more partial solutions
      */
     def next(b: Block): List[Solution] =
       pbs.head.next(b). // get all possible ways that the next block could be placed
-        map{ testLegalMove(_) }. // test each of the new placements for legality
-          flatten // Remove moves that were not legal
+        map{ testLegalMove(_) }.flatten // only keep the legal placements
 
     /**
      * Attempts to add PlacedBlock to the Solution and see if it makes a legal move
@@ -295,34 +283,21 @@ package object snakepuzzle {
      * The recursive depth first search of all arrangements of the snake.
      * Legal solutions are kept and returned.
      *
-     * currentSolution is built backwards; the first move is the final element of the list
+     * partialSolution is built backwards; the first move is the final element of the list
      */
     def recurse(
-        /**
-         * A sublist of snake. These are the remaining snake blocks that have yet to be used
-         */
-        remainingSnake: List[Block],
-
-        /**
-         * The current partial solution that we are working on
-         */
-        currentSolution: Solution,
-
-        /**
-         * This is the cumulative list of valid solutions
-         */
-        solutions: List[Solution]
-
+        remainingSnake: List[Block], // sublist of snake: the remaining blocks to try
+        partialSolution: Solution, // current, in progress solution
           ): List[Solution] = {
 
-      if (remainingSnake == Nil) currentSolution :: solutions
+      if (remainingSnake == Nil) List(partialSolution) // partial solution has completed successfully
       else {
-        currentSolution.next(remainingSnake.head). // find all legal moves of placing the next block
-          flatMap{ recurse(remainingSnake.tail, _, solutions) } // and recurse
+        partialSolution.next(remainingSnake.head). // find all legal moves of placing the next block
+          flatMap{ recurse(remainingSnake.tail, _) } // and recurse
       }
     }
 
-    recurse(snake.tail, Solution.firstPlacement(FIRST_PLACEMENT), Nil)
+    recurse(snake.tail, Solution.firstPlacement(FIRST_PLACEMENT))
   }
 
   /**
@@ -340,8 +315,9 @@ package object snakepuzzle {
     // we use a simpler list of Directions instead.
     val ss: List[(Solution,List[Direction])] = allSolutions.zip(allSolutions.map{ _.pbs.map{ _.d } })
 
-    def recurse(z: List[(Solution,List[Direction])]): List[Solution] = {
-      if (z == Nil) Nil
+    @tailrec
+    def recurse(z: List[(Solution,List[Direction])], accum: List[Solution]): List[Solution] = {
+      if (z == Nil) accum
       else {
         val h :: t = z
         val (s, ds) = h
@@ -353,9 +329,11 @@ package object snakepuzzle {
         val variants = Set(ds, rot1, rot2, rot3)
 
         // filter all following solutions that may contain the rotated solutions and recurse
-        s :: recurse(t.filter{ case (s2, ds2) => !(variants contains ds2) })
+        recurse(t.filter{ case (s2, ds2) => !(variants contains ds2) }, s :: accum)
       }
     }
-    recurse(ss)
+    // return list is built in reverse order using an accumulator to allow tail recursion.
+    // reverse again so the order matches the original solution list
+    recurse(ss, Nil).reverse
   }
 }
