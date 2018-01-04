@@ -340,7 +340,7 @@ package object snakepuzzle {
     // we use a simpler list of Directions instead.
     val ss: List[(Solution,List[Direction])] = allSolutions.zip(allSolutions.map{ _.pbs.map{ _.d } })
 
-    def recurse(z: List[(Solution,List[Direction])]): List[(Solution,List[Direction])] = {
+    def recurse(z: List[(Solution,List[Direction])]): List[Solution] = {
       if (z == Nil) Nil
       else {
         val h :: t = z
@@ -353,9 +353,9 @@ package object snakepuzzle {
         val variants = Set(ds, rot1, rot2, rot3)
 
         // filter all following solutions that may contain the rotated solutions and recurse
-        h :: recurse(t.filter{ case (s2, ds2) => !(variants contains ds2) })
+        s :: recurse(t.filter{ case (s2, ds2) => !(variants contains ds2) })
       }
     }
-    recurse(ss).map{ case (s, ds) => s }
+    recurse(ss)
   }
 }
