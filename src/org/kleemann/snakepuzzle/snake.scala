@@ -48,7 +48,7 @@ package object snakepuzzle {
 
     /**
      * Rotates this Direction along the given axes and return the rotated direction.
-     * If the axis is parellel to the direction then no rotation is performed.
+     * If the axis is parallel to the direction then no rotation is performed.
      * Right hand rotation: thumb=axis, index=this, middle=return
      */
     def rotate(axis: Direction): Direction
