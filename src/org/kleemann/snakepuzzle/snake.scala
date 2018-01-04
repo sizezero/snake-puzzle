@@ -33,43 +33,106 @@ package object snakepuzzle {
    *  One of the 6 right angle direction that can be traveled in 3d space
    */
   trait Direction {
+    /**
+     * Given the starting Coordinate move one space in the given direction
+     * and return the destination Coordinate.
+     */
     def move(c: Coordinate): Coordinate
+
+    /**
+     * Returns the four perpendicular right angles to the given direction
+     */
     def rightAngle: List[Direction]
+
+    /**
+     * Rotates this Direction along the given axes and return the rotated direction.
+     * If the axis is parellel to the direction then no rotation is performed.
+     * Right hand rotation: thumb=axis, index=this, middle=return
+     */
+    def rotate(axis: Direction): Direction
   }
 
   object Direction {
     private def xAxisRightAngle = List[Direction](Up,Down,In,Out)
-    object Left extends Direction {
-      override val toString = "Left"
-      override def move(c: Coordinate): Coordinate = Coordinate(c.x-1, c.y, c.z)
-      override def rightAngle = xAxisRightAngle
-    }
     object Right extends Direction {
       override val toString = "Right"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x+1, c.y, c.z)
       override def rightAngle = xAxisRightAngle
+      override def rotate(axis: Direction): Direction = axis match {
+        case Right => this
+        case Left  => this
+        case Up    => Out
+        case Down  => In
+        case In    => Up
+        case Out   => Down
+      }
+    }
+    object Left extends Direction {
+      override val toString = "Left"
+      override def move(c: Coordinate): Coordinate = Coordinate(c.x-1, c.y, c.z)
+      override def rightAngle = xAxisRightAngle
+      override def rotate(axis: Direction): Direction = axis match {
+        case Right => this
+        case Left  => this
+        case Up    => In
+        case Down  => Out
+        case In    => Down
+        case Out   => Up
+      }
     }
     private val yAxisRightAngle = List[Direction](Left,Right,In,Out)
     object Up extends Direction {
       override val toString = "Up"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y+1, c.z)
       override def rightAngle = yAxisRightAngle
+      override def rotate(axis: Direction): Direction = axis match {
+        case Right => In
+        case Left  => Out
+        case Up    => this
+        case Down  => this
+        case In    => Left
+        case Out   => Right
+      }
     }
     object Down extends Direction {
       override val toString = "Down"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y-1, c.z)
       override def rightAngle = yAxisRightAngle
+      override def rotate(axis: Direction): Direction = axis match {
+        case Right => Out
+        case Left  => In
+        case Up    => this
+        case Down  => this
+        case In    => Right
+        case Out   => Left
+      }
     }
     private val zAxisRightAngle = List[Direction](Left,Right,Up,Down)
     object In extends Direction {
       override val toString = "In"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z+1)
       override def rightAngle = zAxisRightAngle
+      override def rotate(axis: Direction): Direction = axis match {
+        case Right => Down
+        case Left  => Up
+        case Up    => Right
+        case Down  => Left
+        case In    => this
+        case Out   => this
+      }
     }
     object Out extends Direction {
       override val toString = "Out"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z-1)
       override def rightAngle = zAxisRightAngle
+      override def rotate(axis: Direction): Direction = axis match {
+        case Right => Up
+        case Left  => Down
+        case Up    => Left
+        case Down  => Right
+        case In    => this
+        case Out   => this
+      }
     }
   }
   import Direction._
@@ -265,7 +328,34 @@ package object snakepuzzle {
   /**
    * Prune solutions that are the same shape but rotated
    */
-  //val noDuplicateSolutions: List[Solution] = {
+  val prunedSolutions: List[Solution] = {
 
-  //}
+    val startingDirection = FIRST_PLACEMENT.d
+
+    // create a list of solutions that are pairs of
+    // 1) a solution
+    // 2) a matching list of directions
+    //
+    // Solutions are big, complicated objects so when we make rotations to compare
+    // we use a simpler list of Directions instead.
+    val ss: List[(Solution,List[Direction])] = allSolutions.zip(allSolutions.map{ _.pbs.map{ _.d } })
+
+    def recurse(z: List[(Solution,List[Direction])]): List[(Solution,List[Direction])] = {
+      if (z == Nil) Nil
+      else {
+        val h :: t = z
+        val (s, ds) = h
+
+        // from the first element generate a set of all rotated solution variants
+        val rot1 = ds  .map{ _.rotate(startingDirection) }
+        val rot2 = rot1.map{ _.rotate(startingDirection) }
+        val rot3 = rot2.map{ _.rotate(startingDirection) }
+        val variants = Set(ds, rot1, rot2, rot3)
+
+        // filter all following solutions that may contain the rotated solutions and recurse
+        h :: recurse(t.filter{ case (s2, ds2) => !(variants contains ds2) })
+      }
+    }
+    recurse(ss).map{ case (s, ds) => s }
+  }
 }
