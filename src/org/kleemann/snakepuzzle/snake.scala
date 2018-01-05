@@ -11,149 +11,7 @@ package object snakepuzzle {
 
   import scala.annotation.tailrec
 
-  /**
-   * Represents a coordinate in 3D space.
-   *
-   * If the viewer is looking at a window on a wall then:
-   * Positive x moves to the right
-   * Positive y moves up
-   * Positive z moves toward the viewer
-   * This is a right-handed coordinate system with a rotation
-   */
-  case class Coordinate(x: Int, y: Int, z: Int) {
-      override def toString: String = "(%2d,%2d,%2d)".format(x,y,z)
-  }
-
-  object Coordinate {
-    /**
-     * The origin is used several times so use the same object for efficiency and clarity
-     */
-    val origin = Coordinate(0, 0, 0)
-  }
-
-  /**
-   *  One of the 6 right angle direction that can be traveled in 3d space
-   */
-  trait Direction {
-    /**
-     * Given the starting Coordinate move one space in the given direction
-     * and return the destination Coordinate.
-     */
-    def move(c: Coordinate): Coordinate
-
-    /**
-     * Returns the four perpendicular right angles to the given direction
-     */
-    def rightAngle: List[Direction]
-
-    /**
-     * Rotates this Direction along the given axes and return the rotated direction.
-     * If the axis is parallel to the direction then no rotation is performed.
-     * Right hand rotation: thumb=axis, index=this, middle=return
-     */
-    def rotate(axis: Direction): Direction
-  }
-
-  object Direction {
-    private def xAxisRightAngle = List[Direction](Up,Down,In,Out)
-    object Right extends Direction {
-      override val toString = "Right"
-      override def move(c: Coordinate): Coordinate = Coordinate(c.x+1, c.y, c.z)
-      override def rightAngle = xAxisRightAngle
-      override def rotate(axis: Direction): Direction = axis match {
-        case Right => this
-        case Left  => this
-        case Up    => Out
-        case Down  => In
-        case In    => Up
-        case Out   => Down
-      }
-    }
-    object Left extends Direction {
-      override val toString = "Left"
-      override def move(c: Coordinate): Coordinate = Coordinate(c.x-1, c.y, c.z)
-      override def rightAngle = xAxisRightAngle
-      override def rotate(axis: Direction): Direction = axis match {
-        case Right => this
-        case Left  => this
-        case Up    => In
-        case Down  => Out
-        case In    => Down
-        case Out   => Up
-      }
-    }
-    private val yAxisRightAngle = List[Direction](Left,Right,In,Out)
-    object Up extends Direction {
-      override val toString = "Up"
-      override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y+1, c.z)
-      override def rightAngle = yAxisRightAngle
-      override def rotate(axis: Direction): Direction = axis match {
-        case Right => In
-        case Left  => Out
-        case Up    => this
-        case Down  => this
-        case In    => Left
-        case Out   => Right
-      }
-    }
-    object Down extends Direction {
-      override val toString = "Down"
-      override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y-1, c.z)
-      override def rightAngle = yAxisRightAngle
-      override def rotate(axis: Direction): Direction = axis match {
-        case Right => Out
-        case Left  => In
-        case Up    => this
-        case Down  => this
-        case In    => Right
-        case Out   => Left
-      }
-    }
-    private val zAxisRightAngle = List[Direction](Left,Right,Up,Down)
-    object In extends Direction {
-      override val toString = "In"
-      override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z+1)
-      override def rightAngle = zAxisRightAngle
-      override def rotate(axis: Direction): Direction = axis match {
-        case Right => Down
-        case Left  => Up
-        case Up    => Right
-        case Down  => Left
-        case In    => this
-        case Out   => this
-      }
-    }
-    object Out extends Direction {
-      override val toString = "Out"
-      override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z-1)
-      override def rightAngle = zAxisRightAngle
-      override def rotate(axis: Direction): Direction = axis match {
-        case Right => Up
-        case Left  => Down
-        case Up    => Left
-        case Down  => Right
-        case In    => this
-        case Out   => this
-      }
-    }
-  }
-  import Direction._
-
-  /**
-   * A single block in the link's chain.
-   */
-  trait Block {
-  }
-
-  object Block {
-    object Straight extends Block {
-      override val toString = "Straight  "
-    }
-    object RightAngle extends Block {
-      override val toString = "RightAngle"
-    }
-  }
-  import Block._
+  import org.kleemann.snakepuzzle.Block._
 
   /**
    * The structure of an unpositioned snake puzzle
@@ -187,44 +45,12 @@ package object snakepuzzle {
       Straight,
       Straight)
 
+  /**
+   * A successfully solved puzzle must have all pieces fit
+   * within a cube of this size. I.e. all 27 blocks must
+   * fit in a 3x3 cube.
+   */
   val MAX_EXTENT = 3
-
-  /**
-   * A PlacedBlock is a combination of a Block, a Coordinate in space and
-   * the Direction of the next block in the chain.
-   */
-  case class PlacedBlock(b: Block, c: Coordinate, d: Direction) {
-    /**
-     * Given a block in space, find the coordinate and direction
-     * of all possible placements of the following block.
-     */
-    def next(newBlock: Block): List[PlacedBlock] = b match {
-      case Straight => List(PlacedBlock(newBlock, d.move(c), d))
-      case RightAngle => d.rightAngle.map{ d2 => PlacedBlock(newBlock, d2.move(c), d2) }
-    }
-
-    override def toString: String = "%10s %s %s".format(b, c, d)
-  }
-
-  /**
-   * Keeps track of the size a cube is getting as blocks are placed in it.
-   */
-  case class CubeExtent private (min: Coordinate, max: Coordinate) {
-
-    def add(c: Coordinate): CubeExtent =
-      CubeExtent(
-        Coordinate(min.x.min(c.x), min.y.min(c.y), min.z.min(c.z)),
-        Coordinate(max.x.max(c.x), max.y.max(c.y), max.z.max(c.z)))
-
-    def isLegal: Boolean =
-      (min.x - max.x).abs < MAX_EXTENT &&
-      (min.y - max.y).abs < MAX_EXTENT &&
-      (min.z - max.z).abs < MAX_EXTENT
-  }
-
-  object CubeExtent {
-    def firstPlacement(c: Coordinate) = CubeExtent(c, c)
-  }
 
   /**
    * The list of choices from most recent to oldest.
@@ -272,7 +98,7 @@ package object snakepuzzle {
   }
 
   // arbitrary first placement
-  val FIRST_PLACEMENT = PlacedBlock(snake.head, Coordinate.origin, In)
+  val FIRST_PLACEMENT = PlacedBlock(snake.head, Coordinate.origin, Direction.In)
 
   /**
    * All legal solutions including duplicate rotated and symmetrical solutions
@@ -332,8 +158,8 @@ package object snakepuzzle {
         recurse(t.filter{ case (s2, ds2) => !(variants contains ds2) }, s :: accum)
       }
     }
-    // return list is built in reverse order using an accumulator to allow tail recursion.
-    // reverse again so the order matches the original solution list
+    // Return list is built in reverse order using an accumulator to allow tail recursion.
+    // Reverse again so the order matches the original solution list.
     recurse(ss, Nil).reverse
   }
 }
