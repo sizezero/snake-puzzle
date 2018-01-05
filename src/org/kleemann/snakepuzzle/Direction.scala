@@ -17,7 +17,7 @@ package org.kleemann.snakepuzzle {
     def rightAngle: List[Direction]
 
     /**
-     * Rotates this Direction along the given axes and return the rotated direction.
+     * Rotates this Direction along the given axis and return the rotated direction.
      * If the axis is parallel to the direction then no rotation is performed.
      * Right hand rotation: thumb=axis, index=this, middle=return
      */
@@ -26,6 +26,7 @@ package org.kleemann.snakepuzzle {
 
   object Direction {
     private def xAxisRightAngle = List[Direction](Up,Down,In,Out)
+
     object Right extends Direction {
       override val toString = "Right"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x+1, c.y, c.z)
@@ -39,6 +40,7 @@ package org.kleemann.snakepuzzle {
         case Out   => Down
       }
     }
+
     object Left extends Direction {
       override val toString = "Left"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x-1, c.y, c.z)
@@ -52,7 +54,9 @@ package org.kleemann.snakepuzzle {
         case Out   => Up
       }
     }
+
     private val yAxisRightAngle = List[Direction](Left,Right,In,Out)
+
     object Up extends Direction {
       override val toString = "Up"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y+1, c.z)
@@ -66,6 +70,7 @@ package org.kleemann.snakepuzzle {
         case Out   => Right
       }
     }
+
     object Down extends Direction {
       override val toString = "Down"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y-1, c.z)
@@ -79,7 +84,9 @@ package org.kleemann.snakepuzzle {
         case Out   => Left
       }
     }
+
     private val zAxisRightAngle = List[Direction](Left,Right,Up,Down)
+
     object In extends Direction {
       override val toString = "In"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z+1)
@@ -93,6 +100,7 @@ package org.kleemann.snakepuzzle {
         case Out   => this
       }
     }
+
     object Out extends Direction {
       override val toString = "Out"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z-1)

@@ -53,6 +53,11 @@ package object snakepuzzle {
   val MAX_EXTENT = 3
 
   /**
+   * arbitrary first placement
+   */
+  val FIRST_PLACEMENT = PlacedBlock(snake.head, Coordinate.origin, Direction.In)
+
+  /**
    * The list of choices from most recent to oldest.
    *
    * A solution may be partial (not yet completed)
@@ -96,9 +101,6 @@ package object snakepuzzle {
      */
     def firstPlacement(pb: PlacedBlock): Solution = Solution(List(pb), CubeExtent.firstPlacement(pb.c), Set(pb.c))
   }
-
-  // arbitrary first placement
-  val FIRST_PLACEMENT = PlacedBlock(snake.head, Coordinate.origin, Direction.In)
 
   /**
    * All legal solutions including duplicate rotated and symmetrical solutions
@@ -145,6 +147,8 @@ package object snakepuzzle {
     def recurse(z: List[(Solution,List[Direction])], accum: List[Solution]): List[Solution] = {
       if (z == Nil) accum
       else {
+        // keep this solution but filter out all following elements
+        // that are rotated versions of this solution
         val h :: t = z
         val (s, ds) = h
 
@@ -154,7 +158,6 @@ package object snakepuzzle {
         val rot3 = rot2.map{ _.rotate(startingDirection) }
         val variants = Set(ds, rot1, rot2, rot3)
 
-        // filter all following solutions that may contain the rotated solutions and recurse
         recurse(t.filter{ case (s2, ds2) => !(variants contains ds2) }, s :: accum)
       }
     }
