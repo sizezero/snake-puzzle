@@ -17,7 +17,7 @@ package org.kleemann.snakepuzzle {
       case RightAngle => d.rightAngle.map{ d2 => PlacedBlock(newBlock, d2.move(c), d2) }
     }
 
-    override def toString: String = "%10s %s %s".format(b, c, d)
+    override def toString: String = "%10s %s => %s".format(b, c, d)
   }
 
 }
