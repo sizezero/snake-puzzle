@@ -6,6 +6,13 @@ package org.kleemann.snakepuzzle {
    */
   case class CubeExtent private (min: Coordinate, max: Coordinate) {
 
+    /**
+     * A successfully solved puzzle must have all pieces fit
+     * within a cube of this size. I.e. all 27 blocks must
+     * fit in a 3x3 cube.
+     */
+    val MAX_EXTENT = 3
+
     def add(c: Coordinate): CubeExtent =
       CubeExtent(
         Coordinate(min.x.min(c.x), min.y.min(c.y), min.z.min(c.z)),

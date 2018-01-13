@@ -20,4 +20,12 @@ package org.kleemann.snakepuzzle {
     override def toString: String = "%10s %s => %s".format(b, c, d)
   }
 
+  object PlacedBlock {
+
+    /**
+     * arbitrary first placement
+     */
+    val first = PlacedBlock(snake.head, Coordinate.origin, Direction.In)
+  }
+
 }
