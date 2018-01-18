@@ -27,4 +27,7 @@ object Main extends App {
 
   println("Pruned Solutions\n")
   printSolutionsFunctional(prunedSolutions)
+
+  println("Pruned Solutions 2\n")
+  printSolutionsFunctional(prunedSolutions2)
 }

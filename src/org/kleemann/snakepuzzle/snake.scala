@@ -108,4 +108,43 @@ package object snakepuzzle {
     // Reverse again so the order matches the original solution list.
     recurse(ss, Nil).reverse
   }
+
+  /**
+   * Prune solutions that are the same shape but rotated.
+   * This is an alternative implementation that attempts to use standard collection methods.
+   */
+  val prunedSolutions2: List[Solution] = {
+
+    val startingDirection = PlacedBlock.first.d
+
+    // a more compact way of representing a solutions
+    // no coordinates, no bounding space: easy to rotate and compare
+    type Directions = List[Direction]
+
+    type Rotations = Set[Directions]
+
+    def allRotations(ds: Directions): Rotations = {
+        val rot1 = ds  .map{ _.rotate(startingDirection) }
+        val rot2 = rot1.map{ _.rotate(startingDirection) }
+        val rot3 = rot2.map{ _.rotate(startingDirection) }
+        Set(ds, rot1, rot2, rot3)
+    }
+
+    // We could do this all in one expression but breaking it up allows us to
+    // more easily verify the types of the intermediate values.
+
+    // create a list of solutions that are pairs of
+    // 1) a solution
+    // 2) a matching Set of all rotated solutions
+    val ss: List[(Solution,Rotations)] =
+      allSolutions.zip(allSolutions.map{ s => allRotations(s.pbs.map{ _.d }) })
+
+    // group solutions that differ only by their rotation
+    val m: Map[Rotations, List[(Solution,Rotations)]] =
+      ss.groupBy{ case (s, dss) => dss }
+
+    // return the first solution in each group;
+    // they are all just rotations of each other so it doesn't matter which one we end up using
+    m.values.map{ ls => ls.head._1 }.toList
+  }
 }
