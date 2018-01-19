@@ -121,9 +121,12 @@ package object snakepuzzle {
     // no coordinates, no bounding space: easy to rotate and compare
     type Directions = List[Direction]
 
+    // A Directions rotated 90 degrees around the startingDirection axis
+    // in all four possible ways. These are the duplicate solutions we are
+    // trying to get rid of.
     type Rotations = Set[Directions]
 
-    def allRotations(ds: Directions): Rotations = {
+    def directionsToRotations(ds: Directions): Rotations = {
         val rot1 = ds  .map{ _.rotate(startingDirection) }
         val rot2 = rot1.map{ _.rotate(startingDirection) }
         val rot3 = rot2.map{ _.rotate(startingDirection) }
@@ -135,13 +138,13 @@ package object snakepuzzle {
 
     // create a list of solutions that are pairs of
     // 1) a solution
-    // 2) a matching Set of all rotated solutions
+    // 2) a matching Set of all rotations of the paired solution
     val ss: List[(Solution,Rotations)] =
-      allSolutions.zip(allSolutions.map{ s => allRotations(s.pbs.map{ _.d }) })
+      allSolutions.zip(allSolutions.map{ s => directionsToRotations(s.pbs.map{ _.d }) })
 
     // group solutions that differ only by their rotation
     val m: Map[Rotations, List[(Solution,Rotations)]] =
-      ss.groupBy{ case (s, dss) => dss }
+      ss.groupBy{ case (s, r) => r }
 
     // return the first solution in each group;
     // they are all just rotations of each other so it doesn't matter which one we end up using
