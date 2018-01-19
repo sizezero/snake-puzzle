@@ -9,8 +9,6 @@ package org.kleemann
  */
 package object snakepuzzle {
 
-  import scala.annotation.tailrec
-
   import org.kleemann.snakepuzzle.Block._
 
   /**
@@ -72,48 +70,9 @@ package object snakepuzzle {
   }
 
   /**
-   * Prune solutions that are the same shape but rotated
+   * Prune solutions that are the same shape but rotated.
    */
   val prunedSolutions: List[Solution] = {
-
-    val startingDirection = PlacedBlock.first.d
-
-    // create a list of solutions that are pairs of
-    // 1) a solution
-    // 2) a matching list of directions
-    //
-    // Solutions are big, complicated objects so when we make rotations to compare
-    // we use a simpler list of Directions instead.
-    val ss: List[(Solution,List[Direction])] = allSolutions.zip(allSolutions.map{ _.pbs.map{ _.d } })
-
-    @tailrec
-    def recurse(z: List[(Solution,List[Direction])], accum: List[Solution]): List[Solution] = {
-      if (z == Nil) accum
-      else {
-        // keep this solution but filter out all following elements
-        // that are rotated versions of this solution
-        val h :: t = z
-        val (s, ds) = h
-
-        // from the first element generate a set of all rotated solution variants
-        val rot1 = ds  .map{ _.rotate(startingDirection) }
-        val rot2 = rot1.map{ _.rotate(startingDirection) }
-        val rot3 = rot2.map{ _.rotate(startingDirection) }
-        val variants = Set(ds, rot1, rot2, rot3)
-
-        recurse(t.filter{ case (s2, ds2) => !(variants contains ds2) }, s :: accum)
-      }
-    }
-    // Return list is built in reverse order using an accumulator to allow tail recursion.
-    // Reverse again so the order matches the original solution list.
-    recurse(ss, Nil).reverse
-  }
-
-  /**
-   * Prune solutions that are the same shape but rotated.
-   * This is an alternative implementation that attempts to use standard collection methods.
-   */
-  val prunedSolutions2: List[Solution] = {
 
     val startingDirection = PlacedBlock.first.d
 
