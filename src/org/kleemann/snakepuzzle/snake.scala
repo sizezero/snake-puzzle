@@ -82,7 +82,7 @@ package object snakepuzzle {
 
     val startingDirection = first.pbs.head.d
 
-    // a more compact way of representing a solutions
+    // a more compact way of representing a solution
     // no coordinates, no bounding space: easy to rotate and compare
     type Directions = List[Direction]
 
