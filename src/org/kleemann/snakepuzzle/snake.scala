@@ -80,10 +80,13 @@ package object snakepuzzle {
    */
   val prunedSolutions: List[Solution] = {
 
+    // All rotations will be around the axis of the starting direction.
+    // Any duplicate rotated solutions should be around this axis.
     val startingDirection = first.pbs.head.d
 
-    // a more compact way of representing a solution
-    // no coordinates, no bounding space: easy to rotate and compare
+    // A more compact way of representing a solution for this
+    // function's purposes.
+    // No coordinates, no bounding space: easy to rotate and compare.
     type Directions = List[Direction]
 
     // A Directions rotated 90 degrees around the startingDirection axis
