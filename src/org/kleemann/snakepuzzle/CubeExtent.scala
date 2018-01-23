@@ -3,6 +3,9 @@ package org.kleemann.snakepuzzle {
 
   /**
    * Keeps track of the size a cube is getting as blocks are placed in it.
+   *
+   * Each axis value in min is guaranteed to be less than or equal to
+   * the corresponding axis value in max.
    */
   case class CubeExtent private (min: Coordinate, max: Coordinate) {
 

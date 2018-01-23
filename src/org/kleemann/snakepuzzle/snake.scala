@@ -60,9 +60,9 @@ package object snakepuzzle {
         partialSolution: Solution, // current, in progress solution
           ): List[Solution] = {
 
-      // if there are no remainingSnake blocks then all blocks have been
-      // placed into the the solution. That means the partials solution is
-      // a complete and legal solution
+      // If there are no remainingSnake blocks then all blocks have been
+      // placed into the partialSolution. That means the partialSolution is
+      // a complete and legal solution.
       if (remainingSnake == Nil) List(partialSolution)
       else {
         // find all legal ways of adding a another block to the current partialSolution

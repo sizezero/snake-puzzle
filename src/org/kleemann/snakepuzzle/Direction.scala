@@ -17,7 +17,8 @@ package org.kleemann.snakepuzzle {
     def rightAngle: List[Direction]
 
     /**
-     * Rotates this Direction along the given axis and return the rotated direction.
+     * Rotates this Direction along the given axis 90 degrees and return
+     * the rotated direction.
      * If the axis is parallel to the direction then no rotation is performed.
      * Right hand rotation: thumb=axis, index=this, middle=return
      */

@@ -11,7 +11,7 @@ package org.kleemann.snakepuzzle {
    * 2) All blocks must fit into a cube of size 3
    *
    * Due to the private constructor, a Solution object
-   * is always guaranteed to contain only a legal
+   * is always guaranteed to contain only legal
    * block placements
    */
   case class Solution private (
