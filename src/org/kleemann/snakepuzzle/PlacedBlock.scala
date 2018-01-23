@@ -25,7 +25,7 @@ package org.kleemann.snakepuzzle {
     /**
      * arbitrary first placement
      */
-    val first = PlacedBlock(snake.head, Coordinate.origin, Direction.In)
+    def first(b: Block): PlacedBlock = PlacedBlock(b, Coordinate.origin, Direction.In)
   }
 
 }

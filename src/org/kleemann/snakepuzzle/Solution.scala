@@ -9,6 +9,10 @@ package org.kleemann.snakepuzzle {
    * A solution is guaranteed to be legal:
    * 1) Two blocks cannot occupy the same Coordinate
    * 2) All blocks must fit into a cube of size 3
+   *
+   * Due to the private constructor, a Solution object
+   * is always guaranteed to contain only a legal
+   * block placements
    */
   case class Solution private (
       pbs: List[PlacedBlock], // A list of block placements from most recent to oldest
@@ -16,7 +20,8 @@ package org.kleemann.snakepuzzle {
       occupiedCoordinates: Set[Coordinate]) { // cached coordinates of previous placed blocks
 
     /**
-     * Given a new block type, return zero or more possibly partial but legal solutions
+     * Given a new block type, place it onto the previously placed block
+     * and return zero or more possibly partial but legal solutions
      */
     def next(b: Block): List[Solution] =
       pbs.head.next(b). // get all possible ways that the next block could be placed
@@ -44,10 +49,13 @@ package org.kleemann.snakepuzzle {
     /**
      * It's not possible to make an illegal choice in the first move
      */
-    val first = Solution(
-        List(PlacedBlock.first),
-        CubeExtent.firstPlacement(PlacedBlock.first.c),
-        Set(PlacedBlock.first.c))
+    def first(b: Block) = {
+      val pb = PlacedBlock.first(b)
+      Solution(
+        List(pb),
+        CubeExtent.firstPlacement(pb.c),
+        Set(pb.c))
+    }
   }
 
 }

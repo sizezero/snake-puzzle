@@ -43,30 +43,36 @@ package object snakepuzzle {
       Straight,
       Straight)
 
+  val first = Solution.first(snake.head)
+
   /**
    * All legal solutions including duplicate rotated and symmetrical solutions
    */
   val allSolutions: List[Solution] = {
 
-    /**
-     * The recursive depth first search of all arrangements of the snake.
-     * Legal solutions are kept and returned.
-     *
-     * partialSolution is built backwards; the first move is the final element of the list
-     */
+    // The recursive depth first search of all arrangements of the snake.
+    // Legal solutions are kept and returned.
+
+    // partialSolution is built backwards; the first move is the final element of the list
+
     def recurse(
         remainingSnake: List[Block], // sublist of snake: the remaining blocks to try
         partialSolution: Solution, // current, in progress solution
           ): List[Solution] = {
 
-      if (remainingSnake == Nil) List(partialSolution) // partial solution has completed successfully
+      // if there are no remainingSnake blocks then all blocks have been
+      // placed into the the solution. That means the partials solution is
+      // a complete and legal solution
+      if (remainingSnake == Nil) List(partialSolution)
       else {
-        partialSolution.next(remainingSnake.head). // find all legal moves of placing the next block
-          flatMap{ recurse(remainingSnake.tail, _) } // and recurse
+        // find all legal ways of adding a another block to the current partialSolution
+        // keep the resulting legal solutions and recurse
+        partialSolution.next(remainingSnake.head).
+          flatMap{ recurse(remainingSnake.tail, _) }
       }
     }
 
-    recurse(snake.tail, Solution.first)
+    recurse(snake.tail, first)
   }
 
   /**
@@ -74,7 +80,7 @@ package object snakepuzzle {
    */
   val prunedSolutions: List[Solution] = {
 
-    val startingDirection = PlacedBlock.first.d
+    val startingDirection = first.pbs.head.d
 
     // a more compact way of representing a solutions
     // no coordinates, no bounding space: easy to rotate and compare
