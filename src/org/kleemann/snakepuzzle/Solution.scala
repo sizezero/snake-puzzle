@@ -25,7 +25,7 @@ package org.kleemann.snakepuzzle {
      */
     def next(b: Block): List[Solution] =
       pbs.head.next(b). // get all possible ways that the next block could be placed
-        map{ testLegalMove(_) }.flatten // only keep the legal placements
+        flatMap{ testLegalMove(_) } // only keep the legal placements
 
     /**
      * Attempts to add PlacedBlock to the Solution and see if it makes a legal move
