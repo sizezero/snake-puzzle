@@ -4,12 +4,13 @@ package org.kleemann.snakepuzzle {
   import Block._
 
   /**
-   * A PlacedBlock is a combination of a Block, a Coordinate in space and
-   * the Direction of the next block in the chain.
+   * A PlacedBlock represents a chosen placement of a block in the puzzle snake.
+   * It is a combination of a Block type, a Coordinate in space where the block
+   * was placed and the Direction of the next block in the chain.
    */
   case class PlacedBlock(b: Block, c: Coordinate, d: Direction) {
     /**
-     * Given a block in space, find the coordinate and direction
+     * Given an existing PlacedBlock, find the coordinate and direction
      * of all possible placements of the following block.
      */
     def next(newBlock: Block): List[PlacedBlock] = b match {

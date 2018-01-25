@@ -43,6 +43,15 @@ package object snakepuzzle {
       Straight,
       Straight)
 
+  /**
+   * This is a partial solution made by placing the first block of the
+   * snake in a more or less arbitrary placement. Every first move is
+   * equally good since the only thing different is the orientation
+   * (rotation) which doesn't matter.
+   *
+   * All partial solutions attempts and final, correct solutions are based
+   * on this partial solution.
+   */
   val first = Solution.first(snake.head)
 
   /**
@@ -90,14 +99,15 @@ package object snakepuzzle {
     type Directions = List[Direction]
 
     // A Directions rotated 90 degrees around the startingDirection axis
-    // in all four possible ways. These are the duplicate solutions we are
-    // trying to get rid of.
+    // in all four possible ways. Each of these rotations is considered
+    // the same solution thus we would like to get rid of all but one.
     type Rotations = Set[Directions]
 
     def directionsToRotations(ds: Directions): Rotations = {
-        val rot1 = ds  .map{ _.rotate(startingDirection) }
-        val rot2 = rot1.map{ _.rotate(startingDirection) }
-        val rot3 = rot2.map{ _.rotate(startingDirection) }
+        def rotate(ds2: Directions): Directions = ds2.map{ _.rotate(startingDirection) }
+        val rot1 = rotate(ds)
+        val rot2 = rotate(rot1)
+        val rot3 = rotate(rot2)
         Set(ds, rot1, rot2, rot3)
     }
 
