@@ -18,15 +18,16 @@ package org.kleemann.snakepuzzle {
 
     /**
      * Given a new block type, place it onto the previously placed block
-     * and return zero or more possibly partial but legal solutions.
+     * in all possible orientations. Returns zero or more possibly partial
+     * but legal solutions.
      */
     def next(b: Block): List[Solution] =
       pbs.head.next(b). // get all possible ways that the next block could be placed
         flatMap{ testLegalMove(_) } // only keep the legal placements
 
     /**
-     * Attempts to add PlacedBlock to the Solution and see if it makes a legal move
-     * and thus produces a new partial Solution.
+     * Attempts to add PlacedBlock to the Solution. If it makes a legal move
+     * a new partial Solution is returned.
      */
     private def testLegalMove(pb: PlacedBlock): Option[Solution] = {
       // first test if we have already filled that coordinate
