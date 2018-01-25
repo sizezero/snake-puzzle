@@ -8,7 +8,7 @@ I played around with it a bit and solved it a couple times by accident. I then w
 
 This gave me a chance to exercise my rusty Scala skills and also try to write code in the most functional way possible.
 
-The program emulates a chain of 27 wooden blocks. The structure of each block is represented by the [Block trait](../blob/master/src/org/kleemann/snakepuzzle/Block.scala).  There are two types of Blocks:
+The program emulates a chain of 27 wooden blocks. The structure of each block is represented by the [Block trait](../master/src/org/kleemann/snakepuzzle/Block.scala).  There are two types of Blocks:
 1. a Straight Block which connects the previous and next block in a linear fashion. There is no choice in positioning a straight block.
 2. a Right Angle Block with forms a right angle with the previous block and can thus be positioned in four different ways.
 
