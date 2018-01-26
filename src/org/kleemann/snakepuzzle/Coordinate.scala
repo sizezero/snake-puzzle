@@ -8,7 +8,9 @@ package org.kleemann.snakepuzzle {
    * Positive x moves to the right.
    * Positive y moves up.
    * Positive z moves toward the viewer.
+   *
    * This is a right-handed coordinate system with a rotation.
+   * https://www.evl.uic.edu/ralph/508S98/coordinates.html
    */
   case class Coordinate(x: Int, y: Int, z: Int) {
     override def toString: String = "(%2d,%2d,%2d)".format(x,y,z)
