@@ -4,7 +4,7 @@ package org.kleemann.snakepuzzle {
   /**
    *  One of the 6 right angle directions that can be traveled in 3d space
    */
-  trait Direction {
+  sealed trait Direction {
     /**
      * Given the starting Coordinate move one space in the given direction
      * and return the destination Coordinate.
