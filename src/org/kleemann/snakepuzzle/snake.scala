@@ -55,14 +55,13 @@ package object snakepuzzle {
   val first = Solution.first(snake.head)
 
   /**
-   * All legal solutions including duplicate rotated and symmetrical solutions
+   * All complete and valid solutions including duplicate rotated
+   * and symmetrical solutions
    */
   val allSolutions: List[Solution] = {
 
     // The recursive depth first search of all arrangements of the snake.
     // Legal solutions are kept and returned.
-
-    // partialSolution is built backwards; the first move is the final element of the list
 
     def recurse(
         remainingSnake: List[Block], // sublist of snake: the remaining blocks to try
@@ -100,7 +99,8 @@ package object snakepuzzle {
 
     // A Directions rotated 90 degrees around the startingDirection axis
     // in all four possible ways. Each of these rotations is considered
-    // the same solution thus we would like to get rid of all but one.
+    // a trivial variation of the same solution thus we would like to get
+    // rid of all but one.
     type Rotations = Set[Directions]
 
     def directionsToRotations(ds: Directions): Rotations = {
