@@ -97,13 +97,29 @@ package object snakepuzzle {
     // No coordinates, no bounding space: easy to rotate and compare.
     type Directions = List[Direction]
 
-    // A Directions rotated 90 degrees around the startingDirection axis
-    // in all four possible ways. Each of these rotations is considered
-    // a trivial variation of the same solution thus we would like to get
-    // rid of all but one.
-    type Rotations = Set[Directions]
+    // A Variant is a set of trivial ways in which a solution is not
+    // different.
+    // This can be a 90 degrees around the startingDirection axis
+    // in all four possible ways. It can also be a mirror image.
+    type Variant = Set[Directions]
 
-    def directionsToRotations(ds: Directions): Rotations = {
+    def removeVariants(ss: List[Solution], makeVariants: Directions => Variant): List[Solution] = {
+      // create a list of solutions that are pairs of
+      // 1) a solution
+      // 2) a matching Set of all rotations of the paired solution
+      val ss2: List[(Solution,Variant)] =
+        ss.zip(ss.map{ s => makeVariants(s.pbs.map{ _.d }) })
+
+      // group solutions that differ only by their variant
+      val m: Map[Variant, List[(Solution,Variant)]] =
+        ss2.groupBy{ case (s, v) => v }
+
+      // return the first solution in each group;
+      // they are all just variants of each other so it doesn't matter which one we end up using
+      m.values.map{ ls => ls.head._1 }.toList
+    }
+
+    def directionsToRotations(ds: Directions): Variant = {
         def rotate(ds2: Directions): Directions = ds2.map{ _.rotate(startingDirection) }
         val rot1 = rotate(ds)
         val rot2 = rotate(rot1)
@@ -111,26 +127,7 @@ package object snakepuzzle {
         Set(ds, rot1, rot2, rot3)
     }
 
-    // We could do this all in one expression but breaking it up allows us to
-    // more easily verify the types of the intermediate values.
-
-    // create a list of solutions that are pairs of
-    // 1) a solution
-    // 2) a matching Set of all rotations of the paired solution
-    val ss: List[(Solution,Rotations)] =
-      allSolutions.zip(allSolutions.map{ s => directionsToRotations(s.pbs.map{ _.d }) })
-
-    // group solutions that differ only by their rotation
-    val m: Map[Rotations, List[(Solution,Rotations)]] =
-      ss.groupBy{ case (s, r) => r }
-
-    // return the first solution in each group;
-    // they are all just rotations of each other so it doesn't matter which one we end up using
-    val s2: List[Solution] = m.values.map{ ls => ls.head._1 }.toList
-
-    // do the same thing with mirror images
-    type Mirrors = Set[Directions]
-    def directionsToMirrors(ds: Directions): Mirrors = {
+    def directionsToMirrors(ds: Directions): Variant = {
         val mir1: Directions = ds.map { d => d match {
           case Direction.Left => Direction.Right
           case Direction.Right => Direction.Left
@@ -150,10 +147,7 @@ package object snakepuzzle {
         }}
         Set(ds, mir1, mir2, mir3)
     }
-    val ss2: List[(Solution,Mirrors)] =
-      s2.zip(s2.map{ s => directionsToMirrors(s.pbs.map{ _.d }) })
-    val m2: Map[Mirrors, List[(Solution,Mirrors)]] =
-      ss2.groupBy{ case (s, m) => m }
-    m2.values.map{ ls => ls.head._1 }.toList
+
+    removeVariants(removeVariants(allSolutions, directionsToRotations), directionsToMirrors)
   }
 }
