@@ -45,39 +45,10 @@ The input is the ordered structure of the 27 blocks:
       Straight)
 ``` 
 
-The program then performs a depth first search of all possible arrangements of the block list and keeps the legal ones (blocks cannot occupy the same space nor can any block exceed the extent of a 3x3 cube). After the final legal solutions are found, duplicate solutions that are just simple rotations of each other are removed. Two solutions result:
+The program then performs a depth first search of all possible arrangements of the block list and keeps the legal ones (blocks cannot occupy the same space nor can any block exceed the extent of a 3x3 cube). After the final legal solutions are found, duplicate solutions that are just simple rotations or mirror images of each other are removed. One solution results:
 
 ```
 solution #1
-Straight   ( 0, 0, 0) => In
-Straight   ( 0, 0, 1) => In
-RightAngle ( 0, 0, 2) => In
-RightAngle (-1, 0, 2) => Left
-RightAngle (-1, 0, 1) => Out
-Straight   (-1, 1, 1) => Up
-RightAngle (-1, 2, 1) => Up
-RightAngle (-2, 2, 1) => Left
-Straight   (-2, 1, 1) => Down
-RightAngle (-2, 0, 1) => Down
-RightAngle (-2, 0, 2) => In
-RightAngle (-2, 1, 2) => Up
-Straight   (-1, 1, 2) => Right
-RightAngle ( 0, 1, 2) => Right
-Straight   ( 0, 1, 1) => Out
-RightAngle ( 0, 1, 0) => Out
-RightAngle (-1, 1, 0) => Left
-RightAngle (-1, 0, 0) => Down
-RightAngle (-2, 0, 0) => Left
-Straight   (-2, 1, 0) => Up
-RightAngle (-2, 2, 0) => Up
-Straight   (-1, 2, 0) => Right
-RightAngle ( 0, 2, 0) => Right
-Straight   ( 0, 2, 1) => In
-RightAngle ( 0, 2, 2) => In
-Straight   (-1, 2, 2) => Left
-Straight   (-2, 2, 2) => Left
-
-solution #2
 Straight   ( 0, 0, 0) => In
 Straight   ( 0, 0, 1) => In
 RightAngle ( 0, 0, 2) => In
@@ -106,5 +77,4 @@ RightAngle ( 0,-2, 2) => In
 Straight   (-1,-2, 2) => Left
 Straight   (-2,-2, 2) => Left
 ```
- 
- The above two solutions might be symetrical versions of each other. I'll wait until I get the physical puzzle back to verify.
+
