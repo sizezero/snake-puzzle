@@ -108,8 +108,9 @@ package object snakepuzzle {
     // Any one is as good as the other. The rest can be discarded.
     type Variant = Set[Directions]
 
-    // given a list of solutions and a function that can turn Directions into Variant,
-    // return a pruned list of Solution without the duplicate variants
+    // given a list of solutions and a function that can turn Directions (a Solution) into
+    // Variant (set of trivially different solutions), return a pruned list of Solution
+    // without the duplicate variants
     def removeVariants(ss: List[Solution], directionsToVariant: Directions => Variant): List[Solution] = {
       // create a list of solutions that are pairs of
       // 1) a solution
@@ -126,33 +127,44 @@ package object snakepuzzle {
       m.values.map{ ls => ls.head._1 }.toList
     }
 
+    // to save us some work, the following to functions assume our starting direction is
+    // Direction.In so all symmetry is around that direction
+    assert(startingDirection == Direction.In)
+
     def directionsToRotations(ds: Directions): Variant = {
-        def rotate(ds2: Directions): Directions = ds2.map{ _.rotate(startingDirection) }
-        val rot1 = rotate(ds)
-        val rot2 = rotate(rot1)
-        val rot3 = rotate(rot2)
-        Set(ds, rot1, rot2, rot3)
+      // Simple right hand rotation around Direction.In
+      def rotate(ds2: Directions): Directions = ds2.map{ d => d match {
+        case Direction.Left  => Direction.Down
+        case Direction.Down  => Direction.Right
+        case Direction.Right => Direction.Up
+        case Direction.Up    => Direction.Left
+        case _               => d
+      }}
+      val rot1 = rotate(ds)
+      val rot2 = rotate(rot1)
+      val rot3 = rotate(rot2)
+      Set(ds, rot1, rot2, rot3)
     }
 
     def directionsToMirrors(ds: Directions): Variant = {
-        val mir1: Directions = ds.map { d => d match {
-          case Direction.Left => Direction.Right
-          case Direction.Right => Direction.Left
-          case _ => d
-        }}
-        val mir2: Directions = ds.map { d => d match {
-          case Direction.Up => Direction.Down
-          case Direction.Down => Direction.Up
-          case _ => d
-        }}
-        val mir3: Directions = ds.map { d => d match {
-          case Direction.Left => Direction.Right
-          case Direction.Right => Direction.Left
-          case Direction.Up => Direction.Down
-          case Direction.Down => Direction.Up
-          case _ => d
-        }}
-        Set(ds, mir1, mir2, mir3)
+      val mir1: Directions = ds.map { d => d match {
+        case Direction.Left => Direction.Right
+        case Direction.Right => Direction.Left
+        case _ => d
+      }}
+      val mir2: Directions = ds.map { d => d match {
+        case Direction.Up => Direction.Down
+        case Direction.Down => Direction.Up
+        case _ => d
+      }}
+      val mir3: Directions = ds.map { d => d match {
+        case Direction.Left => Direction.Right
+        case Direction.Right => Direction.Left
+        case Direction.Up => Direction.Down
+        case Direction.Down => Direction.Up
+        case _ => d
+      }}
+      Set(ds, mir1, mir2, mir3)
     }
 
     removeVariants(removeVariants(allSolutions, directionsToRotations), directionsToMirrors)
@@ -175,10 +187,5 @@ package object snakepuzzle {
     // 3) removeVariants is a higher order function that allows the variant defining behavior
     // to be cleanly separated from the other operations. I'm not sure I would have used a higher
     // order function if Scala didn't have such a clean syntax for passing functions as parameters.
-    //
-    // 4) I added a general purpose rotate method to the Direction object. This was not necessary as
-    // I only really need to rotate around the startingDirection. This was not obvious until I wrote
-    // the directionsToMirror function here instead of adding functionality to the Direction object.
-    // TODO: rewrite rotation outside of Direction object.
   }
 }
