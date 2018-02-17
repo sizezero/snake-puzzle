@@ -6,7 +6,7 @@ package org.kleemann.snakepuzzle {
   /**
    * A PlacedBlock represents a chosen placement of a block in the puzzle snake.
    * It is a combination of a Block type, a Coordinate in space where the block
-   * was placed and the Direction of the next block in the chain.
+   * was placed and the Direction from the previously placed block to this block.
    */
   case class PlacedBlock(b: Block, c: Coordinate, d: Direction) {
     /**
