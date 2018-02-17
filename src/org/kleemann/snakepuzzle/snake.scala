@@ -89,8 +89,8 @@ package object snakepuzzle {
    */
   val prunedSolutions: List[Solution] = {
 
-    // All rotations will be around the axis of the starting direction.
-    // Any duplicate rotated solutions should be around this axis.
+    // All variants will be around the axis of the starting direction.
+    // Any duplicate rotated/mirrored solutions should be around this axis.
     val startingDirection = first.pbs.head.d
 
     // A more compact way of representing a solution for this
@@ -98,24 +98,30 @@ package object snakepuzzle {
     // No coordinates, no bounding space: easy to rotate and compare.
     type Directions = List[Direction]
 
-    // A Variant is a set of trivial ways in which a solution is not
+    def solutionToDirections(s: Solution): Directions = s.pbs.map{ _.d }
+
+    // A Variant is a set of trivial ways in which a solution can be
     // different.
     // This can be a 90 degrees around the startingDirection axis
     // in all four possible ways. It can also be a mirror image.
+    // There is no single correct solution in a set of variants.
+    // Any one is as good as the other. The rest can be discarded.
     type Variant = Set[Directions]
 
-    def removeVariants(ss: List[Solution], makeVariants: Directions => Variant): List[Solution] = {
+    // given a list of solutions and a function that can turn Directions into Variant,
+    // return a pruned list of Solution without the duplicate variants
+    def removeVariants(ss: List[Solution], directionsToVariants: Directions => Variant): List[Solution] = {
       // create a list of solutions that are pairs of
       // 1) a solution
       // 2) a matching Set of all variants of the paired solution
       val ss2: List[(Solution,Variant)] =
-        ss.zip(ss.map{ s => makeVariants(s.pbs.map{ _.d }) })
+        ss.zip(ss.map{ s => directionsToVariants(solutionToDirections(s)) })
 
-      // group solutions that differ only by their variant
+      // group solutions that differ only by their set of variants
       val m: Map[Variant, List[(Solution,Variant)]] =
         ss2.groupBy{ case (s, v) => v }
 
-      // return the first solution in each group;
+      // return the first solution in each variant group;
       // they are all just variants of each other so it doesn't matter which one we end up using
       m.values.map{ ls => ls.head._1 }.toList
     }
@@ -150,5 +156,24 @@ package object snakepuzzle {
     }
 
     removeVariants(removeVariants(allSolutions, directionsToRotations), directionsToMirrors)
+
+    // Post Analysis:
+    // The above solution is an interesting functional way to solve the problem:
+    //
+    // 1) The input objects (Solution) were not implemented in the correct way to
+    // allow variants to be detected and removed. Instead of refactoring the original
+    // classes to allow for multiple purposes, simply transform the objects into a
+    // more useful shape.
+    //
+    // 2) My first solution did not use custom types and signatures looked like this:
+    // val m: Map[Set[List[Direction]], List[(Solution,Set[List[Direction]])]]
+    // instead of
+    // val m: Map[Variant, List[(Solution,Variant)]]
+    // types are great when you want to write functionally and don't want to create
+    // objects that couple methods and data
+    //
+    // 3) removeVariants is a higher order function that allows the variant defining behavior
+    // to be cleanly separated from the other operations. I'm not sure I would have used a higher
+    // order function if Scala didn't have such a clean syntax for passing functions as parameters.
   }
 }
