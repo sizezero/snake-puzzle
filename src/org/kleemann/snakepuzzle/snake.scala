@@ -126,6 +126,34 @@ package object snakepuzzle {
 
     // return the first solution in each group;
     // they are all just rotations of each other so it doesn't matter which one we end up using
-    m.values.map{ ls => ls.head._1 }.toList
+    val s2: List[Solution] = m.values.map{ ls => ls.head._1 }.toList
+
+    // do the same thing with mirror images
+    type Mirrors = Set[Directions]
+    def directionsToMirrors(ds: Directions): Mirrors = {
+        val mir1: Directions = ds.map { d => d match {
+          case Direction.Left => Direction.Right
+          case Direction.Right => Direction.Left
+          case _ => d
+        }}
+        val mir2: Directions = ds.map { d => d match {
+          case Direction.Up => Direction.Down
+          case Direction.Down => Direction.Up
+          case _ => d
+        }}
+        val mir3: Directions = ds.map { d => d match {
+          case Direction.Left => Direction.Right
+          case Direction.Right => Direction.Left
+          case Direction.Up => Direction.Down
+          case Direction.Down => Direction.Up
+          case _ => d
+        }}
+        Set(ds, mir1, mir2, mir3)
+    }
+    val ss2: List[(Solution,Mirrors)] =
+      s2.zip(s2.map{ s => directionsToMirrors(s.pbs.map{ _.d }) })
+    val m2: Map[Mirrors, List[(Solution,Mirrors)]] =
+      ss2.groupBy{ case (s, m) => m }
+    m2.values.map{ ls => ls.head._1 }.toList
   }
 }
