@@ -84,7 +84,8 @@ package object snakepuzzle {
   }
 
   /**
-   * Prune solutions that are the same shape but rotated.
+   * Prune solutions that are the same shape but either rotated or mirrored.
+   * These trivial variants should be considered the same solution.
    */
   val prunedSolutions: List[Solution] = {
 
@@ -106,7 +107,7 @@ package object snakepuzzle {
     def removeVariants(ss: List[Solution], makeVariants: Directions => Variant): List[Solution] = {
       // create a list of solutions that are pairs of
       // 1) a solution
-      // 2) a matching Set of all rotations of the paired solution
+      // 2) a matching Set of all variants of the paired solution
       val ss2: List[(Solution,Variant)] =
         ss.zip(ss.map{ s => makeVariants(s.pbs.map{ _.d }) })
 
