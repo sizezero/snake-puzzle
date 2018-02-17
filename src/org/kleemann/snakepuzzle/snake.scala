@@ -95,7 +95,7 @@ package object snakepuzzle {
 
     // A more compact way of representing a solution for this
     // function's purposes.
-    // No coordinates, no bounding space: easy to rotate and compare.
+    // No coordinates, no bounding space: easy to transform and compare.
     type Directions = List[Direction]
 
     def solutionToDirections(s: Solution): Directions = s.pbs.map{ _.d }
@@ -110,14 +110,14 @@ package object snakepuzzle {
 
     // given a list of solutions and a function that can turn Directions into Variant,
     // return a pruned list of Solution without the duplicate variants
-    def removeVariants(ss: List[Solution], directionsToVariants: Directions => Variant): List[Solution] = {
+    def removeVariants(ss: List[Solution], directionsToVariant: Directions => Variant): List[Solution] = {
       // create a list of solutions that are pairs of
       // 1) a solution
       // 2) a matching Set of all variants of the paired solution
       val ss2: List[(Solution,Variant)] =
-        ss.zip(ss.map{ s => directionsToVariants(solutionToDirections(s)) })
+        ss.zip(ss.map{ s => directionsToVariant(solutionToDirections(s)) })
 
-      // group solutions that differ only by their set of variants
+      // group solutions that belong to the same set of variants
       val m: Map[Variant, List[(Solution,Variant)]] =
         ss2.groupBy{ case (s, v) => v }
 
@@ -175,5 +175,10 @@ package object snakepuzzle {
     // 3) removeVariants is a higher order function that allows the variant defining behavior
     // to be cleanly separated from the other operations. I'm not sure I would have used a higher
     // order function if Scala didn't have such a clean syntax for passing functions as parameters.
+    //
+    // 4) I added a general purpose rotate method to the Direction object. This was not necessary as
+    // I only really need to rotate around the startingDirection. This was not obvious until I wrote
+    // the directionsToMirror function here instead of adding functionality to the Direction object.
+    // TODO: rewrite rotation outside of Direction object.
   }
 }
