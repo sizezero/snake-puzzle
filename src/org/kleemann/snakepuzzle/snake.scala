@@ -100,8 +100,8 @@ package object snakepuzzle {
 
     def solutionToDirections(s: Solution): Directions = s.pbs.map{ _.d }
 
-    // A Variant is a set of trivial ways in which a solution can be
-    // different.
+    // A Variant is a set of Solutions (represented as Directions) that
+    // are all trivial variations of each other.
     // This can be a 90 degrees around the startingDirection axis
     // in all four possible ways. It can also be a mirror image.
     // There is no single correct solution in a set of variants.
@@ -110,7 +110,7 @@ package object snakepuzzle {
 
     // given a list of solutions and a function that can turn Directions (a Solution) into
     // Variant (set of trivially different solutions), return a pruned list of Solution
-    // without the duplicate variants
+    // without the duplicate solutions
     def removeVariants(ss: List[Solution], directionsToVariant: Directions => Variant): List[Solution] = {
       // create a list of solutions that are pairs of
       // 1) a solution
@@ -131,14 +131,16 @@ package object snakepuzzle {
     // Direction.In so all symmetry is around that direction
     assert(startingDirection == Direction.In)
 
+    import Direction.{Left,Right,Up,Down}
+
     def directionsToRotations(ds: Directions): Variant = {
       // Simple right hand rotation around Direction.In
       def rotate(ds2: Directions): Directions = ds2.map{ d => d match {
-        case Direction.Left  => Direction.Down
-        case Direction.Down  => Direction.Right
-        case Direction.Right => Direction.Up
-        case Direction.Up    => Direction.Left
-        case _               => d
+        case Left  => Down
+        case Down  => Right
+        case Right => Up
+        case Up    => Left
+        case _     => d
       }}
       val rot1 = rotate(ds)
       val rot2 = rotate(rot1)
@@ -148,18 +150,18 @@ package object snakepuzzle {
 
     def directionsToMirrors(ds: Directions): Variant = {
       def flipHorz(d: Direction): Direction = d match {
-        case Direction.Left => Direction.Right
-        case Direction.Right => Direction.Left
-        case _ => d
+        case Left  => Right
+        case Right => Left
+        case _     => d
       }
       def flipVert(d: Direction): Direction = d match {
-        case Direction.Up => Direction.Down
-        case Direction.Down => Direction.Up
-        case _ => d
+        case Up   => Down
+        case Down => Up
+        case _    => d
       }
-      val mir1: Directions = ds.map { flipHorz(_) }
-      val mir2: Directions = ds.map { flipVert(_) }
-      val mir3: Directions = ds.map { d => flipHorz(flipVert(d)) }
+      val mir1 = ds.map { flipHorz(_) }
+      val mir2 = ds.map { flipVert(_) }
+      val mir3 = ds.map { d => flipHorz(flipVert(d)) }
       Set(ds, mir1, mir2, mir3)
     }
 
