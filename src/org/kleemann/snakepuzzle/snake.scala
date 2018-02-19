@@ -147,23 +147,19 @@ package object snakepuzzle {
     }
 
     def directionsToMirrors(ds: Directions): Variant = {
-      val mir1: Directions = ds.map { d => d match {
+      def flipHorz(d: Direction): Direction = d match {
         case Direction.Left => Direction.Right
         case Direction.Right => Direction.Left
         case _ => d
-      }}
-      val mir2: Directions = ds.map { d => d match {
+      }
+      def flipVert(d: Direction): Direction = d match {
         case Direction.Up => Direction.Down
         case Direction.Down => Direction.Up
         case _ => d
-      }}
-      val mir3: Directions = ds.map { d => d match {
-        case Direction.Left => Direction.Right
-        case Direction.Right => Direction.Left
-        case Direction.Up => Direction.Down
-        case Direction.Down => Direction.Up
-        case _ => d
-      }}
+      }
+      val mir1: Directions = ds.map { flipHorz(_) }
+      val mir2: Directions = ds.map { flipVert(_) }
+      val mir3: Directions = ds.map { d => flipHorz(flipVert(d)) }
       Set(ds, mir1, mir2, mir3)
     }
 
