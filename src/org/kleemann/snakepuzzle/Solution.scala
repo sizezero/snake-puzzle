@@ -53,9 +53,14 @@ package org.kleemann.snakepuzzle {
     def first(snake: List[Block]): Option[Solution] = {
       intCubeRoot(snake.length).map { root =>
         val pb = PlacedBlock.first(snake.head)
+        // The cube root of the snake length is equal to the length of
+        // each side of the resulting cube. This is the maximum
+        // extent of the bounding box of a legal solution (the snake
+        // must be arranged into a cube of these dimensions)
+        val maxExtent = root
         Solution(
           List(pb),
-          CubeExtent.firstPlacement(root, pb.c),
+          CubeExtent.firstPlacement(maxExtent, pb.c),
           Set(pb.c))
       }
     }
