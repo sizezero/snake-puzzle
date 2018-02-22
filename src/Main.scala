@@ -50,17 +50,14 @@ object Main extends App {
     }
   }
 
-  val allSolutions: Option[List[Solution]] = solve(snake3x3x3)
+  solve(snake3x3x3) match {
+    case None => println("Error: length of snake is not a perfect cube")
+    case Some(ss) => {
+      println("All Solutions\n")
+      printSolutions(ss)
 
-  if (allSolutions.isEmpty) {
-    println("Error: length of snake is not a perfect cube")
-  } else {
-    val ss = allSolutions.orNull // can't be null
-
-    println("All Solutions\n")
-    printSolutions(ss)
-
-    println("Pruned Solutions\n")
-    printSolutions(prune(ss))
+      println("Pruned Solutions\n")
+      printSolutions(prune(ss))
+    }
   }
 }
