@@ -1,5 +1,9 @@
 
-
+/**
+ * This application solves a wooden box puzzle:
+ *
+ * https://mypuzzles.wordpress.com/solution-the-snake-cube/
+ */
 object Main extends App {
   import org.kleemann.snakepuzzle._
   import org.kleemann.snakepuzzle.Block._
