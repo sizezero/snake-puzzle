@@ -14,24 +14,19 @@ package org.kleemann.snakepuzzle {
       // Legal solutions are kept and returned.
 
       def recurse(
-          remainingSnake: List[Block], // sublist of snake: the remaining blocks to try
           partialSolution: Solution, // current, in progress solution
             ): List[Solution] = {
 
-        // If there are no remainingSnake blocks then all blocks have been
-        // placed into the partialSolution. That means the partialSolution is
-        // a complete and legal solution.
-        if (remainingSnake == Nil) List(partialSolution)
-        else {
+        if (partialSolution.isComplete) List(partialSolution)
+        else
           // find all legal ways of adding a another block to the current partialSolution
           // keep the resulting legal solutions and recurse
-          partialSolution.next(remainingSnake.head).
-            flatMap{ recurse(remainingSnake.tail, _) }
-        }
+          partialSolution.next.
+            flatMap{ recurse(_) }
       }
 
       Solution.first(snake).map { partialSolutionOfFirstPlacement =>
-        recurse(snake.tail, partialSolutionOfFirstPlacement)
+        recurse(partialSolutionOfFirstPlacement)
       }
     }
   }
