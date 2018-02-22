@@ -30,8 +30,8 @@ package org.kleemann.snakepuzzle {
         }
       }
 
-      Solution.first(snake).flatMap { partialSolutionOfOnePlacement =>
-        Some(recurse(snake.tail, partialSolutionOfOnePlacement))
+      Solution.first(snake).map { partialSolutionOfFirstPlacement =>
+        recurse(snake.tail, partialSolutionOfFirstPlacement)
       }
     }
   }

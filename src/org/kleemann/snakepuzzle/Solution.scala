@@ -51,13 +51,12 @@ package org.kleemann.snakepuzzle {
      * If the length of snake is not a perfect cube then None is returned.
      */
     def first(snake: List[Block]): Option[Solution] = {
-      intCubeRoot(snake.length).flatMap { root =>
+      intCubeRoot(snake.length).map { root =>
         val pb = PlacedBlock.first(snake.head)
-        Some(
-          Solution(
-            List(pb),
-            CubeExtent.firstPlacement(root, pb.c),
-            Set(pb.c)))
+        Solution(
+          List(pb),
+          CubeExtent.firstPlacement(root, pb.c),
+          Set(pb.c))
       }
     }
 
