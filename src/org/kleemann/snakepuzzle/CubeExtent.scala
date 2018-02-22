@@ -16,7 +16,13 @@ package org.kleemann.snakepuzzle {
    */
   case class CubeExtent private (maxExtent: Int, min: Coordinate, max: Coordinate) {
 
-    def add(c: Coordinate): CubeExtent =
+    /**
+     * Add the given coordination to the extent, expanding the extent if necessary
+     *
+     * I'm drinking the Scala punctuation kool-aide and using operators instead of
+     * named functions.
+     */
+    def +(c: Coordinate): CubeExtent =
       if (c.x>=min.x && c.x<=max.x && c.y>=min.y && c.y<=max.y && c.z>=min.z && c.z<=max.z)
         // optimization: don't create a new object if the given Coordinate
         // is already within the current extent
