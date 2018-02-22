@@ -19,6 +19,8 @@ package org.kleemann.snakepuzzle {
 
   object Direction {
     private def xAxisRightAngle = List[Direction](Up,Down,In,Out)
+    private val yAxisRightAngle = List[Direction](Left,Right,In,Out)
+    private val zAxisRightAngle = List[Direction](Left,Right,Up,Down)
 
     object Right extends Direction {
       override val toString = "Right"
@@ -32,8 +34,6 @@ package org.kleemann.snakepuzzle {
       override def rightAngle = xAxisRightAngle
     }
 
-    private val yAxisRightAngle = List[Direction](Left,Right,In,Out)
-
     object Up extends Direction {
       override val toString = "Up"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y+1, c.z)
@@ -46,8 +46,6 @@ package org.kleemann.snakepuzzle {
       override def rightAngle = yAxisRightAngle
     }
 
-    private val zAxisRightAngle = List[Direction](Left,Right,Up,Down)
-
     object In extends Direction {
       override val toString = "In"
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z+1)
@@ -59,6 +57,13 @@ package org.kleemann.snakepuzzle {
       override def move(c: Coordinate): Coordinate = Coordinate(c.x, c.y, c.z-1)
       override def rightAngle = zAxisRightAngle
     }
+
+    /**
+     * This is an arbitrary first direction that all solutions will
+     * start with. By explicitly defining this, we can make some
+     * optimizations later.
+     */
+    val first = In
   }
 
 }

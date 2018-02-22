@@ -14,9 +14,7 @@ package org.kleemann.snakepuzzle {
    * min.y <= max.y
    * min.z <= max.z
    */
-  case class CubeExtent private (min: Coordinate, max: Coordinate) {
-
-    val MAX_EXTENT = 3
+  case class CubeExtent private (maxExtent: Int, min: Coordinate, max: Coordinate) {
 
     def add(c: Coordinate): CubeExtent =
       if (c.x>=min.x && c.x<=max.x && c.y>=min.y && c.y<=max.y && c.z>=min.z && c.z<=max.z)
@@ -25,17 +23,18 @@ package org.kleemann.snakepuzzle {
         this
       else
         CubeExtent(
+          maxExtent,
           Coordinate(min.x.min(c.x), min.y.min(c.y), min.z.min(c.z)),
           Coordinate(max.x.max(c.x), max.y.max(c.y), max.z.max(c.z)))
 
     def isLegal: Boolean =
-      max.x - min.x < MAX_EXTENT &&
-      max.y - min.y < MAX_EXTENT &&
-      max.z - min.z < MAX_EXTENT
+      max.x - min.x < maxExtent &&
+      max.y - min.y < maxExtent &&
+      max.z - min.z < maxExtent
   }
 
   object CubeExtent {
-    def firstPlacement(c: Coordinate) = CubeExtent(c, c)
+    def firstPlacement(maxExtent: Int, c: Coordinate) = CubeExtent(maxExtent, c, c)
   }
 
 }

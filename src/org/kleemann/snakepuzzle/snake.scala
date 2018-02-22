@@ -9,56 +9,12 @@ package org.kleemann
  */
 package object snakepuzzle {
 
-  import org.kleemann.snakepuzzle.Block._
-
-  /**
-   * The structure of an unpositioned snake puzzle
-   */
-  val snake: List[Block] = List(
-      Straight,
-      Straight,
-      RightAngle,
-      RightAngle,
-      RightAngle,
-      Straight,
-      RightAngle,
-      RightAngle,
-      Straight,
-      RightAngle,
-      RightAngle,
-      RightAngle,
-      Straight,
-      RightAngle,
-      Straight,
-      RightAngle,
-      RightAngle,
-      RightAngle,
-      RightAngle,
-      Straight,
-      RightAngle,
-      Straight,
-      RightAngle,
-      Straight,
-      RightAngle,
-      Straight,
-      Straight)
-
-  /**
-   * This is a partial solution made by placing the first block of the
-   * snake in a more or less arbitrary placement. Every first move is
-   * equally good since the only thing different is the orientation
-   * (rotation) which doesn't matter.
-   *
-   * All partial solutions attempts and final, correct solutions are based
-   * on this partial solution.
-   */
-  val first = Solution.first(snake.head)
-
   /**
    * All complete and valid solutions including duplicate rotated
-   * and symmetrical solutions
+   * and symmetrical solutions. If the length of the snake is not
+   * a perfect cube then None is returned.
    */
-  val allSolutions: List[Solution] = {
+  def solve(snake: List[Block]): Option[List[Solution]] = {
 
     // The recursive depth first search of all arrangements of the snake.
     // Legal solutions are kept and returned.
@@ -80,18 +36,16 @@ package object snakepuzzle {
       }
     }
 
-    recurse(snake.tail, first)
+    Solution.first(snake).flatMap { partialSolutionOfOnePlacement =>
+      Some(recurse(snake.tail, partialSolutionOfOnePlacement))
+    }
   }
 
   /**
    * Prune solutions that are the same shape but either rotated or mirrored.
    * These trivial variants should be considered the same solution.
    */
-  val prunedSolutions: List[Solution] = {
-
-    // All variants will be around the axis of the starting direction.
-    // Any duplicate rotated/mirrored solutions should be around this axis.
-    val startingDirection = first.pbs.head.d
+  def prune(ss: List[Solution]): List[Solution] = {
 
     // A more compact way of representing a solution for this
     // function's purposes.
@@ -129,7 +83,7 @@ package object snakepuzzle {
 
     // to save us some work, the following to functions assume our starting direction is
     // Direction.In so all symmetry is around that direction
-    assert(startingDirection == Direction.In)
+    assert(Direction.first == Direction.In)
 
     import Direction.{Left,Right,Up,Down}
 
@@ -165,7 +119,9 @@ package object snakepuzzle {
       Set(ds, mir1, mir2, mir3)
     }
 
-    removeVariants(removeVariants(allSolutions, directionsToRotations), directionsToMirrors)
+    removeVariants(
+      removeVariants(ss, directionsToRotations),
+      directionsToMirrors)
 
     // Post Analysis:
     // The above solution is an interesting functional way to solve the problem:

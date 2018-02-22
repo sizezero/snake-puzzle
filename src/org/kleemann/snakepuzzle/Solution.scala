@@ -46,14 +46,28 @@ package org.kleemann.snakepuzzle {
   object Solution {
 
     /**
-     * It's not possible to make an illegal choice in the first move
+     * Produces a partial solution of the first move of the given snake.
+     * It's not possible to make an illegal choice in the first move.
+     * If the length of snake is not a perfect cube then None is returned.
      */
-    def first(b: Block) = {
-      val pb = PlacedBlock.first(b)
-      Solution(
-        List(pb),
-        CubeExtent.firstPlacement(pb.c),
-        Set(pb.c))
+    def first(snake: List[Block]): Option[Solution] = {
+      intCubeRoot(snake.length).flatMap { root =>
+        val pb = PlacedBlock.first(snake.head)
+        Some(
+          Solution(
+            List(pb),
+            CubeExtent.firstPlacement(root, pb.c),
+            Set(pb.c)))
+      }
+    }
+
+    /**
+     * Returns the cube root if the argument is a perfect cube.
+     */
+    private def intCubeRoot(perfectCube: Int): Option[Int] = {
+      val root = math.round(math.cbrt(perfectCube)).toInt
+      if (root*root*root == perfectCube) Some(root)
+      else None
     }
   }
 
