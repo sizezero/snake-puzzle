@@ -11,7 +11,7 @@ object Main extends App {
   /**
    * The structure of an unpositioned snake puzzle
    */
-  val snake3x3: List[Block] = List(
+  val snake3x3x3: List[Block] = List(
       Straight,
       Straight,
       RightAngle,
@@ -50,7 +50,7 @@ object Main extends App {
     }
   }
 
-  val allSolutions: Option[List[Solution]] = solve(snake3x3)
+  val allSolutions: Option[List[Solution]] = solve(snake3x3x3)
 
   if (allSolutions.isEmpty) {
     println("Error: length of snake is not a perfect cube")
