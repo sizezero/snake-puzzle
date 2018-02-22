@@ -63,11 +63,11 @@ package org.kleemann.snakepuzzle {
 
     /**
      * Returns the cube root if the argument is a perfect cube.
+     * Only checks for the first dozen integer roots. Larger
+     * puzzles than this don't exist.
      */
     private def intCubeRoot(perfectCube: Int): Option[Int] = {
-      val root = math.round(math.cbrt(perfectCube)).toInt
-      if (root*root*root == perfectCube) Some(root)
-      else None
+      (1 to 12).find{ root => root*root*root == perfectCube }
     }
   }
 
