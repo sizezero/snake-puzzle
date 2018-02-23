@@ -1,7 +1,7 @@
 
 package org.kleemann.snakepuzzle {
 
-  import Block._
+  import Block.{Straight,RightAngle}
 
   /**
    * A PlacedBlock represents a chosen placement of a block in the puzzle snake.
