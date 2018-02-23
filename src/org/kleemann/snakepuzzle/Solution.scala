@@ -2,7 +2,7 @@
 package org.kleemann.snakepuzzle {
 
   /**
-   * This is a Solution is either in the process of being solved
+   * This is a Solution that is either in the process of being solved
    * or has already been completed.
    * Some blocks have been placed, some may have yet to be placed.
    * If every block has been placed then this solution is a solved
@@ -14,8 +14,8 @@ package org.kleemann.snakepuzzle {
    * 2) All blocks must fit into a bounding cube of size 3
    */
   case class Solution private (
-      blocksToPlace: List[Block], // the remaining blocks that haven't yet been placed
-      pbs: List[PlacedBlock], // the blocks that have been placed from most recent to oldest
+      blocksToPlace: List[Block], // the remaining blocks that haven't yet been placed; next block to place is first in list
+      pbs: List[PlacedBlock], // the blocks that have been placed; most recent block is first in list
       extent: CubeExtent, // the cached extent of previously placed blocks
       occupiedCoordinates: Set[Coordinate]) { // cached coordinates of previous placed blocks
 
