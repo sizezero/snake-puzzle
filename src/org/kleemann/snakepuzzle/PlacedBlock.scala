@@ -11,9 +11,10 @@ package org.kleemann.snakepuzzle {
   case class PlacedBlock(b: Block, c: Coordinate, d: Direction) {
     /**
      * Given an existing PlacedBlock, find the coordinate and direction
-     * of all possible placements of the following block.
+     * of all possible placements of the following block.  These positions
+     * may or may not be legal placements
      */
-    def next(newBlock: Block): List[PlacedBlock] = b match {
+    def nextPlacements(newBlock: Block): List[PlacedBlock] = b match {
       case Straight => List(PlacedBlock(newBlock, d.move(c), d))
       case RightAngle => d.rightAngle.map{ d2 => PlacedBlock(newBlock, d2.move(c), d2) }
     }

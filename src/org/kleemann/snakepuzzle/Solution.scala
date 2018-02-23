@@ -30,10 +30,10 @@ package org.kleemann.snakepuzzle {
      * If the Solution has been completed then there are no remaining
      * blocks to be placed and no Solutions will be returned.
      */
-    def next: List[Solution] =
+    def nextLegalPlacements: List[Solution] =
       if (isComplete) Nil
       else
-        pbs.head.next(blocksToPlace.head). // get all possible ways that the next block could be placed
+        pbs.head.nextPlacements(blocksToPlace.head). // get all possible ways that the next block could be placed
           flatMap{ pb => testLegalMove(pb) } // only keep the legal placements
 
     /**

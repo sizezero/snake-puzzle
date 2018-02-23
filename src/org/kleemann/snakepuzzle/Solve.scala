@@ -21,7 +21,7 @@ package org.kleemann.snakepuzzle {
         else
           // find all legal ways of adding a another block to the current partialSolution
           // keep the resulting legal solutions and recurse
-          partialSolution.next.
+          partialSolution.nextLegalPlacements.
             flatMap{ recurse(_) }
       }
 
