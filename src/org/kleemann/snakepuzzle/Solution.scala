@@ -58,21 +58,26 @@ package org.kleemann.snakepuzzle {
     /**
      * Produces a partial solution of the first move of the given snake.
      * It's not possible to make an illegal choice in the first move.
-     * If the length of snake is not a perfect cube then None is returned.
+     * If the length of snake is not a perfect cube then the left
+     * part of Either contains the error message.
      */
-    def first(snake: List[Block]): Option[Solution] = {
-      intCubeRoot(snake.length).map { root =>
-        val pb = PlacedBlock.first(snake.head)
-        // The cube root of the snake length is equal to the length of
-        // each side of the resulting cube. This is the maximum
-        // extent of the bounding box of a legal solution (the snake
-        // must be arranged into a cube of these dimensions)
-        val maxExtent = root
-        Solution(
-          snake.tail,
-          List(pb),
-          CubeExtent.firstPlacement(maxExtent, pb.c),
-          Set(pb.c))
+    def first(snake: List[Block]): Either[String,Solution] = {
+      intCubeRoot(snake.length) match {
+        case Some(root) => {
+          val pb = PlacedBlock.first(snake.head)
+          // The cube root of the snake length is equal to the length of
+          // each side of the resulting cube. This is the maximum
+          // extent of the bounding box of a legal solution (the snake
+          // must be arranged into a cube of these dimensions)
+          val maxExtent = root
+          Right(
+            Solution(
+              snake.tail,
+              List(pb),
+              CubeExtent.firstPlacement(maxExtent, pb.c),
+              Set(pb.c)))
+        }
+        case None => Left("length of snake is not a cube root: "+snake.length)
       }
     }
 

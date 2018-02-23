@@ -51,8 +51,8 @@ object Main extends App {
   }
 
   solve(snake3x3x3) match {
-    case None => println("Error: length of snake is not a perfect cube")
-    case Some(ss) => {
+    case Left(msg) => println(msg)
+    case Right(ss) => {
       println("All Solutions\n")
       printSolutions(ss)
 

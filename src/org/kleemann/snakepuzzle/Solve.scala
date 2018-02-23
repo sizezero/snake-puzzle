@@ -6,9 +6,9 @@ package org.kleemann.snakepuzzle {
     /**
      * All complete and valid solutions including duplicate rotated
      * and symmetrical solutions. If the length of the snake is not
-     * a perfect cube then None is returned.
+     * a perfect cube then an error message in in left is returned.
      */
-    def solve(snake: List[Block]): Option[List[Solution]] = {
+    def solve(snake: List[Block]): Either[String,List[Solution]] = {
 
       // The recursive depth first search of all arrangements of the snake.
       // Legal solutions are kept and returned.

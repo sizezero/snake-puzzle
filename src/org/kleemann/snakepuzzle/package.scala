@@ -6,7 +6,7 @@ package object snakepuzzle {
   // so we must use these aliases if we want to put large function definitions
   // into separate files
 
-  def solve(snake: List[Block]): Option[List[Solution]] = Solve.solve(snake)
+  def solve(snake: List[Block]): Either[String,List[Solution]] = Solve.solve(snake)
 
   def prune(ss: List[Solution]): List[Solution] = Prune.prune(ss)
 
