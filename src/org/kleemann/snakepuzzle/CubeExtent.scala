@@ -24,11 +24,8 @@ package org.kleemann.snakepuzzle {
      * Add the given coordination to the extent, expanding the extent if necessary.
      * Returns None if the given coordinated causes the CubeExtent to exceed the
      * maxExtent.
-     *
-     * I'm drinking the Scala punctuation kool-aide and using operators instead of
-     * named functions.
      */
-    def +(c: Coordinate): Option[CubeExtent] = {
+    def add(c: Coordinate): Option[CubeExtent] = {
       val min2 = Coordinate(min.x.min(c.x), min.y.min(c.y), min.z.min(c.z))
       val max2 = Coordinate(max.x.max(c.x), max.y.max(c.y), max.z.max(c.z))
       if (

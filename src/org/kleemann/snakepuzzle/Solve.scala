@@ -5,17 +5,14 @@ package org.kleemann.snakepuzzle {
 
     /**
      * All complete and valid solutions including duplicate rotated
-     * and symmetrical solutions. If the length of the snake is not
-     * a perfect cube then an error message in in left is returned.
+     * and symmetrical solutions. If snake is not legal then an error
+     * message in in left is returned.
      */
     def solve(snake: List[Block]): Either[String,List[Solution]] = {
 
-      // The recursive depth first search of all arrangements of the snake.
-      // Legal solutions are kept and returned.
-
-      def recurse(
-          partialSolution: Solution, // current, in progress solution
-            ): List[Solution] = {
+      // Given a partial solution, recursive depth first search of all remaining
+      // arrangements of the snake. Legal solutions are kept and returned.
+      def recurse(partialSolution: Solution): List[Solution] = {
 
         if (partialSolution.isComplete) List(partialSolution)
         else
@@ -25,7 +22,10 @@ package org.kleemann.snakepuzzle {
             flatMap{ recurse(_) }
       }
 
+      // Create the starting partial solution with a single placement...
       Solution.first(snake).map { partialSolutionOfFirstPlacement =>
+        // ...if it is legal (which means the snake is legal) recurse
+        // into the full depth first search
         recurse(partialSolutionOfFirstPlacement)
       }
     }

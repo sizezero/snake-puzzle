@@ -45,7 +45,7 @@ package org.kleemann.snakepuzzle {
       if (occupiedCoordinates contains pb.c) None
       else
         // then see if it fits in the legal cube size
-        (extent + pb.c).map{ newExtent =>
+        extent.add(pb.c).map { newExtent =>
           Solution(blocksToPlace.tail, pb :: pbs, newExtent, occupiedCoordinates + pb.c)
         }
     }
