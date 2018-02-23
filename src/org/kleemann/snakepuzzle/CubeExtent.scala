@@ -22,21 +22,15 @@ package org.kleemann.snakepuzzle {
      * I'm drinking the Scala punctuation kool-aide and using operators instead of
      * named functions.
      */
-    def +(c: Coordinate): CubeExtent =
-      if (c.x>=min.x && c.x<=max.x && c.y>=min.y && c.y<=max.y && c.z>=min.z && c.z<=max.z)
-        // optimization: don't create a new object if the given Coordinate
-        // is already within the current extent
-        this
-      else
-        CubeExtent(
-          maxExtent,
-          Coordinate(min.x.min(c.x), min.y.min(c.y), min.z.min(c.z)),
-          Coordinate(max.x.max(c.x), max.y.max(c.y), max.z.max(c.z)))
-
-    def isLegal: Boolean =
-      max.x - min.x < maxExtent &&
-      max.y - min.y < maxExtent &&
-      max.z - min.z < maxExtent
+    def +(c: Coordinate): Option[CubeExtent] = {
+      val min2 = Coordinate(min.x.min(c.x), min.y.min(c.y), min.z.min(c.z))
+      val max2 = Coordinate(max.x.max(c.x), max.y.max(c.y), max.z.max(c.z))
+      if (
+        max2.x - min2.x < maxExtent &&
+        max2.y - min2.y < maxExtent &&
+        max2.z - min2.z < maxExtent) Some(CubeExtent(maxExtent, min2, max2))
+      else None
+    }
   }
 
   object CubeExtent {

@@ -43,12 +43,11 @@ package org.kleemann.snakepuzzle {
     private def testLegalMove(pb: PlacedBlock): Option[Solution] = {
       // first test if we have already filled that coordinate
       if (occupiedCoordinates contains pb.c) None
-      else {
+      else
         // then see if it fits in the legal cube size
-        val newExtent = extent + pb.c
-        if (newExtent.isLegal) Some(Solution(blocksToPlace.tail, pb :: pbs, newExtent, occupiedCoordinates + pb.c))
-        else None
-      }
+        (extent + pb.c).map{ newExtent =>
+          Solution(blocksToPlace.tail, pb :: pbs, newExtent, occupiedCoordinates + pb.c)
+        }
     }
 
     override def toString: String = pbs.reverse.mkString("\n")
