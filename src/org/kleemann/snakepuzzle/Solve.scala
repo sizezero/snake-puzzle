@@ -6,7 +6,7 @@ package org.kleemann.snakepuzzle {
     /**
      * All complete and valid solutions including duplicate rotated
      * and symmetrical solutions. If snake is not legal then an error
-     * message in in left is returned.
+     * message in Left is returned.
      */
     def solve(snake: List[Block]): Either[String,List[Solution]] = {
 
