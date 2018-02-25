@@ -1,6 +1,6 @@
 # snake-puzzle
 
-My niece gave me the following wooden block puzzle for xmas. It's a connected snake of 27 blocks that is solved by twisting it so that it becaomes a 3x3 cube:
+My niece gave me the following wooden block puzzle for xmas. It's a connected snake of 27 blocks that is solved by twisting it so that it becomes a 3x3 cube:
 
 https://mypuzzles.wordpress.com/solution-the-snake-cube/
 
