@@ -11,7 +11,8 @@ package org.kleemann.snakepuzzle {
    * A Solution has a private constructor thus every Solution
    * instance is guaranteed to only contain legal block placements:
    * 1) Two blocks cannot occupy the same Coordinate
-   * 2) All blocks must fit into a bounding cube of size 3
+   * 2) All blocks must fit into a bounding cube dependent on the length
+   * of the original snake
    */
   case class Solution private (
       blocksToPlace: List[Block], // the remaining blocks that haven't yet been placed; next block to place is first in list
@@ -77,7 +78,7 @@ package org.kleemann.snakepuzzle {
               CubeExtent.firstPlacement(maxExtent, pb.c),
               Set(pb.c)))
         }
-        case None => Left("length of snake is not a cube root: "+snake.length)
+        case None => Left("length of snake is not a perfect cube: "+snake.length)
       }
     }
 

@@ -10,8 +10,9 @@ package org.kleemann.snakepuzzle {
      */
     def solve(snake: List[Block]): Either[String,List[Solution]] = {
 
-      // Given a partial solution, recursive depth first search of all remaining
-      // arrangements of the snake. Legal solutions are kept and returned.
+      // Given a partial solution, perform a recursive depth first search
+      // of all remaining arrangements of the snake. Legal solutions are
+      // kept and returned.
       def recurse(partialSolution: Solution): List[Solution] = {
 
         if (partialSolution.isComplete) List(partialSolution)
