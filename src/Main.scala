@@ -11,7 +11,7 @@ object Main extends App {
   /**
    * The structure of an unpositioned snake puzzle
    */
-  val snake3x3x3: List[Block] = List(
+  val snake3x3x3 = List[Block](
       Straight,
       Straight,
       RightAngle,
