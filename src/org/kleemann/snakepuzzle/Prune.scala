@@ -20,26 +20,26 @@ package org.kleemann.snakepuzzle {
 
       def solutionToDirections(s: Solution): Directions = s.pbs.map{ _.d }
 
-      // A Variant is a set of Solutions (represented as Directions) that
+      // A Variants is a set of Solutions (represented as Directions) that
       // are all trivial variations of each other.
       // This can be a 90 degrees around the startingDirection axis
       // in all four possible ways. It can also be a mirror image.
       // There is no single correct solution in a set of variants.
       // Any one is as good as the other. The rest can be discarded.
-      type Variant = Set[Directions]
+      type Variants = Set[Directions]
 
       // given a list of solutions and a function that can turn Directions (a Solution) into
       // Variant (set of trivially different solutions), return a pruned list of Solution
       // without the duplicate solutions
-      def removeVariants(ss: List[Solution], directionsToVariant: Directions => Variant): List[Solution] = {
+      def removeVariants(ss: List[Solution], directionsToVariants: Directions => Variants): List[Solution] = {
         // create a list of solutions that are pairs of
         // 1) a solution
         // 2) a matching Set of all variants of the paired solution
-        val ss2: List[(Solution,Variant)] =
-          ss.zip(ss.map{ s => directionsToVariant(solutionToDirections(s)) })
+        val ss2: List[(Solution,Variants)] =
+          ss.zip(ss.map{ s => directionsToVariants(solutionToDirections(s)) })
 
         // group solutions that belong to the same set of variants
-        val m: Map[Variant, List[(Solution,Variant)]] =
+        val m: Map[Variants, List[(Solution,Variants)]] =
           ss2.groupBy{ case (s, v) => v }
 
         // return the first solution in each variant group;
@@ -53,7 +53,7 @@ package org.kleemann.snakepuzzle {
 
       import Direction.{Left,Right,Up,Down}
 
-      def directionsToRotations(ds: Directions): Variant = {
+      def directionsToRotations(ds: Directions): Variants = {
         // Simple right hand rotation around Direction.In
         def rotate(ds2: Directions): Directions = ds2.map{ d => d match {
           case Left  => Down
@@ -68,7 +68,7 @@ package org.kleemann.snakepuzzle {
         Set(ds, rot1, rot2, rot3)
       }
 
-      def directionsToMirrors(ds: Directions): Variant = {
+      def directionsToMirrors(ds: Directions): Variants = {
         def flipHorz(d: Direction): Direction = d match {
           case Left  => Right
           case Right => Left
@@ -100,7 +100,7 @@ package org.kleemann.snakepuzzle {
       // 2) My first solution did not use custom types and signatures looked like this:
       // val m: Map[Set[List[Direction]], List[(Solution,Set[List[Direction]])]]
       // instead of
-      // val m: Map[Variant, List[(Solution,Variant)]]
+      // val m: Map[Variants, List[(Solution,Variants)]]
       // types are great when you want to write functionally and don't want to create
       // objects that couple methods and data
       //
