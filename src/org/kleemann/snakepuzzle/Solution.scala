@@ -27,8 +27,9 @@ package org.kleemann.snakepuzzle {
 
     /**
      * If there are more blocks to be placed then place the next block in
-     * all possible orientations and return the resulting valid Solutions.
-     * If the Solution has been completed then there are no remaining
+     * all possible orientations and return the resulting valid partial
+     * Solutions.
+     * If the partial Solution has been completed then there are no remaining
      * blocks to be placed and no Solutions will be returned.
      */
     def nextLegalPlacements: List[Solution] =

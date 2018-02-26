@@ -13,15 +13,13 @@ package org.kleemann.snakepuzzle {
       // Given a partial solution, perform a recursive depth first search
       // of all remaining arrangements of the snake. Legal solutions are
       // kept and returned.
-      def recurse(partialSolution: Solution): List[Solution] = {
-
+      def recurse(partialSolution: Solution): List[Solution] =
         if (partialSolution.isComplete) List(partialSolution)
         else
           // find all legal ways of adding a another block to the current partialSolution
           // recurse and keep the resulting solutions
           partialSolution.nextLegalPlacements.
             flatMap{ recurse(_) }
-      }
 
       // Create the starting partial solution with a single placement...
       Solution.first(snake).map { partialSolutionOfFirstPlacement =>
