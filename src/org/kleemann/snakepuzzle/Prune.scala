@@ -29,8 +29,8 @@ package org.kleemann.snakepuzzle {
       type Variants = Set[Directions]
 
       // given a list of solutions and a function that can turn Directions (a Solution) into
-      // Variant (set of trivially different solutions), return a pruned list of Solution
-      // without the duplicate solutions
+      // Variants (set of trivially different solutions), return a list of Solutions
+      // that prunes all but one of each variant
       def removeVariants(ss: List[Solution], directionsToVariants: Directions => Variants): List[Solution] = {
         // create a list of solutions that are pairs of
         // 1) a solution
@@ -53,7 +53,7 @@ package org.kleemann.snakepuzzle {
 
       import Direction.{Left,Right,Up,Down}
 
-      def directionsToRotations(ds: Directions): Variants = {
+      def rotationVariants(ds: Directions): Variants = {
         // Simple right hand rotation around Direction.In
         def rotate(ds2: Directions): Directions = ds2.map{ d => d match {
           case Left  => Down
@@ -68,7 +68,7 @@ package org.kleemann.snakepuzzle {
         Set(ds, rot1, rot2, rot3)
       }
 
-      def directionsToMirrors(ds: Directions): Variants = {
+      def mirrorVariants(ds: Directions): Variants = {
         def flipHorz(d: Direction): Direction = d match {
           case Left  => Right
           case Right => Left
@@ -86,8 +86,8 @@ package org.kleemann.snakepuzzle {
       }
 
       removeVariants(
-        removeVariants(ss, directionsToRotations),
-        directionsToMirrors)
+        removeVariants(ss, rotationVariants),
+        mirrorVariants)
 
       // Post Analysis:
       // The above solution is an interesting functional way to solve the problem:
