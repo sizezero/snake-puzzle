@@ -42,7 +42,7 @@ package org.kleemann.snakepuzzle {
      * Attempts to add PlacedBlock to the Solution. If it makes a legal move
      * a new partial Solution is returned.
      */
-    private def testLegalMove(pb: PlacedBlock): Option[Solution] = {
+    private def testLegalMove(pb: PlacedBlock): Option[Solution] =
       // first test if we have already filled that coordinate
       if (occupiedCoordinates contains pb.c) None
       else
@@ -50,7 +50,6 @@ package org.kleemann.snakepuzzle {
         extent.add(pb.c).map { newExtent =>
           Solution(blocksToPlace.tail, pb :: pbs, newExtent, occupiedCoordinates + pb.c)
         }
-    }
 
     override def toString: String = pbs.reverse.mkString("\n")
   }
@@ -66,12 +65,12 @@ package org.kleemann.snakepuzzle {
     def first(snake: List[Block]): Either[String,Solution] = {
       intCubeRoot(snake.length) match {
         case Some(root) => {
-          val pb = PlacedBlock.first(snake.head)
           // The cube root of the snake length is equal to the length of
           // each side of the resulting cube. This is the maximum
           // extent of the bounding box of a legal solution (the snake
           // must be arranged into a cube of these dimensions)
           val maxExtent = root
+          val pb = PlacedBlock.first(snake.head)
           Right(
             Solution(
               snake.tail,

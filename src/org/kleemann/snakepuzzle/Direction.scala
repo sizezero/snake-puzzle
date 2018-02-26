@@ -18,7 +18,7 @@ package org.kleemann.snakepuzzle {
   }
 
   object Direction {
-    private def xAxisRightAngle = List[Direction](Up,Down,In,Out)
+    private val xAxisRightAngle = List[Direction](Up,Down,In,Out)
     private val yAxisRightAngle = List[Direction](Left,Right,In,Out)
     private val zAxisRightAngle = List[Direction](Left,Right,Up,Down)
 
