@@ -47,7 +47,7 @@ package org.kleemann.snakepuzzle {
         m.values.map{ ls => ls.head._1 }.toList
       }
 
-      // to save us some work, the following to functions assume our starting direction is
+      // to save us some work, the following two functions assume our starting direction is
       // Direction.In so all symmetry is around that direction
       assert(Direction.first == Direction.In)
 
