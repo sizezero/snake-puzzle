@@ -116,14 +116,24 @@ object Main extends App {
     }
   }
 
-  solve(snake4x4x4) match {
-    case Left(msg) => println(msg)
-    case Right(ss) => {
-      println("All Solutions\n")
-      printSolutions(ss)
+  def printRun(msg: String, snake: List[Block]) {
+    val banner = "=" * 20
+    println(banner + msg + banner)
+    println
+    solve(snake) match {
+      case Left(msg) => println(msg)
+      case Right(ss) => {
+        println("All Solutions\n")
+        printSolutions(ss)
 
-      println("Pruned Solutions\n")
-      printSolutions(prune(ss))
+        println("Pruned Solutions\n")
+        printSolutions(prune(ss))
+      }
     }
   }
+
+  printRun("3x3x3", snake3x3x3)
+
+  // 4x4x4 puzzle takes around 10 minutes
+  //printRun("4x4x4", snake4x4x4)
 }

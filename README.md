@@ -78,7 +78,7 @@ Straight   (-1,-2, 2) => Left
 Straight   (-2,-2, 2) => Left
 ```
 
-There is a larger version of the puzzle called [Anaconda](https://www.youtube.com/watch?v=di86kNWTehw) which is snake of length 64 that must be arranged into a cube of size 4x4x4. This program can solve that cube as well. (although it takes around 10 minutes instead of a second)  There appear to be four unique solutions to the Anaconda puzzle.
+There is a larger version of the puzzle called [Anaconda](https://www.youtube.com/watch?v=di86kNWTehw) which is snake of length 64 that must be arranged into a cube of size 4x4x4. This program can solve that cube as well. (although it takes around 10 minutes instead of 1/6 of a second)  There appear to be four unique solutions to the Anaconda puzzle.
 
 In case you don't want to run the program yourself you can see [all solutions for both puzzles](doc/solutions.txt).
 
