@@ -40,6 +40,72 @@ object Main extends App {
       Straight,
       Straight)
 
+  val snake4x4x4 = List[Block](
+      Straight,
+      Straight,
+      RightAngle,
+      RightAngle,
+      Straight,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      Straight,
+      Straight,
+      RightAngle,
+      RightAngle,
+      Straight,
+      RightAngle,
+      RightAngle,
+      Straight,
+      RightAngle,
+      RightAngle,
+      Straight,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      Straight,
+      RightAngle,
+      Straight,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      Straight,
+      RightAngle,
+      Straight,
+      Straight,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      Straight,
+      Straight,
+      RightAngle,
+      RightAngle,
+      Straight,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      RightAngle,
+      Straight,
+      Straight,
+      RightAngle,
+      Straight)
+
   def printSolutions(ss: List[Solution]) {
     // the functional way to iterate with an index
     ss.toStream.zipWithIndex.foreach{ case (s, zeroBased) =>
@@ -50,7 +116,7 @@ object Main extends App {
     }
   }
 
-  solve(snake3x3x3) match {
+  solve(snake4x4x4) match {
     case Left(msg) => println(msg)
     case Right(ss) => {
       println("All Solutions\n")

@@ -45,7 +45,7 @@ The input is the ordered structure of the 27 blocks:
       Straight)
 ``` 
 
-The program then performs a depth first search of all possible arrangements of the block list and keeps the legal ones (blocks cannot occupy the same space nor can any block exceed the extent of a 3x3 cube). After the final legal solutions are found, duplicate solutions that are just simple rotations or mirror images of each other are removed. One solution results:
+The program then performs a depth first search of all possible arrangements of the block list and keeps the legal ones (blocks cannot occupy the same space nor can any block exceed the extent of a 3x3x3 cube). After the final legal solutions are found, duplicate solutions that are just simple rotations or mirror images of each other are removed. One solution results:
 
 ```
 solution #1
@@ -78,3 +78,8 @@ Straight   (-1,-2, 2) => Left
 Straight   (-2,-2, 2) => Left
 ```
 
+There is a larger version of the puzzle called [Anaconda](https://www.youtube.com/watch?v=di86kNWTehw) which is snake of length 64 that must be arranged into a cube of size 4x4x4. This program can solve that cube as well. (although it takes around 10 minutes instead of a second)  There appear to be four unique solutions to the Anaconda puzzle.
+
+In case you don't want to run the program yourself you can see [all solutions for both puzzles](doc/solutions.txt).
+
+There is a meta question. If you could construct your own snake out of custom straight and right angle pieces, how likely is it that the snake would be solvable? There are 2^27 possible snakes for the simple puzzle and 2^64 snakes for Anaconda. If I brute forced the generation of each snake and ran the solution on it it may take 4 years or so to run the simple puzzle and I have no idea how long for Anaconda.
