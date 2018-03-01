@@ -29,17 +29,19 @@ package org.kleemann.snakepuzzle {
               partialSolution.nextLegalPlacements.
                 flatMap{ recurse(_, depth+1) }
             else
-              // the is functionally identical to the above clause; it is just
-              // parallelized
+              // The is functionally identical to the above clause; it is just
+              // parallelized.
+              // It's only efficient to use parallelization at the top of the
+              // search tree, not near the leaves.
               partialSolution.nextLegalPlacements.
                 par.flatMap{ recurse(_, depth+1) }.toList
         }
 
       // Create the starting partial solution with a single placement...
-      PartialSolution.first(snake).map { partialSolutionOfFirstPlacement =>
+      PartialSolution.first(snake).map { firstPlacement =>
         // ...if it is legal (which means the snake is legal) recurse
         // into the full depth first search
-        recurse(partialSolutionOfFirstPlacement, 0)
+        recurse(firstPlacement, 0)
       }
     }
 
