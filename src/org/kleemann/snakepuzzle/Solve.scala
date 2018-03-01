@@ -19,29 +19,33 @@ package org.kleemann.snakepuzzle {
       // Given a partial solution, perform a recursive depth first search
       // of all remaining arrangements of the snake. Legal solutions are
       // kept and returned.
-      def recurse(partialSolution: Solution): List[Solution] =
-        if (partialSolution.isComplete) List(partialSolution)
-        else
-          // find all legal ways of adding a another block to the current partialSolution
-          // recurse and keep the resulting solutions
-          partialSolution.nextLegalPlacements.
-            flatMap{ recurse(_) }
+      def recurse(partialSolution: PartialSolution): List[Solution] =
+        Solution.isComplete(partialSolution) match {
+          case Some(s) => List(s)
+          case None =>
+            // find all legal ways of adding a another block to the current partialSolution
+            // recurse and keep the resulting solutions
+            partialSolution.nextLegalPlacements.
+              flatMap{ recurse(_) }
+        }
 
       // a parallel version of the recursive solution. Tests show that we should only
       // use the parallel version at the top of the search tree otherwise the overhead
       // will actually increase the total time
-      def recurseParallel(partialSolution: Solution, depth: Int): ParSeq[Solution] =
-        if (partialSolution.isComplete) ParSeq(partialSolution)
-        else
-          if (depth < parallelDepth)
-            partialSolution.nextLegalPlacements.
-              par.flatMap{ recurseParallel(_, depth+1) }
-          else
-            partialSolution.nextLegalPlacements.
-              flatMap{ recurse(_) }.par
+      def recurseParallel(partialSolution: PartialSolution, depth: Int): ParSeq[Solution] =
+        Solution.isComplete(partialSolution) match {
+          case Some(s) => ParSeq(s)
+          case None =>
+            if (depth < parallelDepth)
+              partialSolution.nextLegalPlacements.
+                par.flatMap{ recurseParallel(_, depth+1) }
+            else
+              partialSolution.nextLegalPlacements.
+                flatMap{ recurse(_) }.par
+        }
 
       // Create the starting partial solution with a single placement...
-      Solution.first(snake).map { partialSolutionOfFirstPlacement =>
+      PartialSolution.first(snake).map { partialSolutionOfFirstPlacement =>
         // ...if it is legal (which means the snake is legal) recurse
         // into the full depth first search
         if (parallelDepth <= 0)
