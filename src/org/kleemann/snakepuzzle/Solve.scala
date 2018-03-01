@@ -19,40 +19,27 @@ package org.kleemann.snakepuzzle {
       // Given a partial solution, perform a recursive depth first search
       // of all remaining arrangements of the snake. Legal solutions are
       // kept and returned.
-      def recurse(partialSolution: PartialSolution): List[Solution] =
+      def recurse(partialSolution: PartialSolution, depth: Int): List[Solution] =
         Solution.isComplete(partialSolution) match {
           case Some(s) => List(s)
           case None =>
-            // find all legal ways of adding a another block to the current partialSolution
-            // recurse and keep the resulting solutions
-            partialSolution.nextLegalPlacements.
-              flatMap{ recurse(_) }
-        }
-
-      // a parallel version of the recursive solution. Tests show that we should only
-      // use the parallel version at the top of the search tree otherwise the overhead
-      // will actually increase the total time
-      def recurseParallel(partialSolution: PartialSolution, depth: Int): ParSeq[Solution] =
-        Solution.isComplete(partialSolution) match {
-          case Some(s) => ParSeq(s)
-          case None =>
-            if (depth < parallelDepth)
+            if (depth >= parallelDepth)
+              // find all legal ways of adding a another block to the current partialSolution
+              // recurse and keep the resulting solutions
               partialSolution.nextLegalPlacements.
-                par.flatMap{ recurseParallel(_, depth+1) }
+                flatMap{ recurse(_, depth+1) }
             else
+              // the is functionally identical to the above clause; it is just
+              // parallelized
               partialSolution.nextLegalPlacements.
-                flatMap{ recurse(_) }.par
+                par.flatMap{ recurse(_, depth+1) }.toList
         }
 
       // Create the starting partial solution with a single placement...
       PartialSolution.first(snake).map { partialSolutionOfFirstPlacement =>
         // ...if it is legal (which means the snake is legal) recurse
         // into the full depth first search
-        if (parallelDepth <= 0)
-          // don't waste any effort on parallelization
-          recurse(partialSolutionOfFirstPlacement)
-        else
-          recurseParallel(partialSolutionOfFirstPlacement, 0).toList
+        recurse(partialSolutionOfFirstPlacement, 0)
       }
     }
 
