@@ -50,8 +50,6 @@ package org.kleemann.snakepuzzle {
         extent.add(pb.c).map { newExtent =>
           PartialSolution(blocksToPlace.tail, pb :: pbs, newExtent, occupiedCoordinates + pb.c)
         }
-
-    override def toString: String = pbs.reverse.mkString("\n")
   }
 
   object PartialSolution {
