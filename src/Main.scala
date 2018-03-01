@@ -132,8 +132,22 @@ object Main extends App {
     }
   }
 
+  def timeTrial {
+    import java.util.Calendar
+    import java.util.concurrent.TimeUnit
+
+    (0 to 64).foreach { i =>
+      val start = Calendar.getInstance.getTimeInMillis()
+      solve(snake4x4x4, i) // throw away the result; we're just timing
+      val end = Calendar.getInstance.getTimeInMillis()
+      val duration = end - start
+      val hours: Double = duration / (1000.0 * 60)
+      println("%02d %f".format(i, hours))
+    }
+  }
+
   printRun("3x3x3", snake3x3x3)
 
-  // 4x4x4 puzzle takes around 10 minutes
+  // 4x4x4 puzzle takes around 3 minutes
   //printRun("4x4x4", snake4x4x4)
 }
