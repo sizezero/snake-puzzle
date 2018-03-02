@@ -149,5 +149,5 @@ object Main extends App {
   printRun("3x3x3", snake3x3x3)
 
   // 4x4x4 puzzle takes around 3 minutes
-  //printRun("4x4x4", snake4x4x4)
+  printRun("4x4x4", snake4x4x4)
 }

@@ -85,9 +85,11 @@ package org.kleemann.snakepuzzle {
         Set(ds, mir1, mir2, mir3)
       }
 
-      removeVariants(
-        removeVariants(ss, rotationVariants),
-        mirrorVariants)
+      // produce mirror variants and then rotate the mirrors
+      def rotateAndMirrorVariants(ds: Directions): Variants =
+        mirrorVariants(ds).flatMap{ rotationVariants(_) }
+
+      removeVariants(ss, rotateAndMirrorVariants),
 
       // Post Analysis:
       // The above solution is an interesting functional way to solve the problem:
