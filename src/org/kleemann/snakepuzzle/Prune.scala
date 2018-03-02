@@ -85,7 +85,7 @@ package org.kleemann.snakepuzzle {
       def rotateAndMirrorVariants(ds: Directions): Variants =
         mirrorVariants(ds).flatMap{ rotationVariants(_) }
 
-      removeVariants(ss, rotateAndMirrorVariants),
+      removeVariants(ss, rotateAndMirrorVariants)
 
       // Post Analysis:
       // The above solution is an interesting functional way to solve the problem:
