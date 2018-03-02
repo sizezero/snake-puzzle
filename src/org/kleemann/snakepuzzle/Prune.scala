@@ -6,10 +6,6 @@ package org.kleemann.snakepuzzle {
     /**
      * Prune solutions that are the same shape but either rotated or mirrored.
      * These trivial variants should be considered the same solution.
-     *
-     * It would be nice to have this in a separate file than solve() but
-     * It seems that all top level functions in a scala package need to be
-     * in the same package object file.
      */
     def prune(ss: List[Solution]): List[Solution] = {
 
