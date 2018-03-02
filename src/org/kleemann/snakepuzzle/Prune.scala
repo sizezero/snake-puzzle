@@ -31,12 +31,12 @@ package org.kleemann.snakepuzzle {
         // create a list of solutions that are pairs of
         // 1) a solution
         // 2) a matching Set of all variants of the paired solution
-        val ss2: List[(Solution,Variants)] =
+        val z: List[(Solution,Variants)] =
           ss.zip(ss.map{ s => directionsToVariants(solutionToDirections(s)) })
 
         // group solutions that belong to the same set of variants
         val m: Map[Variants, List[(Solution,Variants)]] =
-          ss2.groupBy{ case (s, v) => v }
+          z.groupBy{ case (s, v) => v }
 
         // return the first solution in each variant group;
         // they are all just variants of each other so it doesn't matter which one we end up using
