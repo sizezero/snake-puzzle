@@ -46,7 +46,7 @@ package org.kleemann.snakepuzzle {
     }
 
     /**
-     * Same as solve(snake,maxDepth) but use a heuristic for the
+     * Same as solve(snake,parallelDepth) but use a heuristic for the
      * best guess of parallelDepth.
      */
     def solve(snake: List[Block]): Either[String,List[Solution]] = {
