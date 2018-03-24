@@ -1,5 +1,7 @@
 # snake-puzzle
 
+## Introduction
+
 My niece gave me the following wooden block puzzle for xmas. It's a connected snake of 27 blocks that is solved by twisting it so that it becomes a 3x3 cube:
 
 https://mypuzzles.wordpress.com/solution-the-snake-cube/
@@ -7,6 +9,17 @@ https://mypuzzles.wordpress.com/solution-the-snake-cube/
 I played around with it a bit and solved it a couple times by accident. I then wondered if there were multiple correct solutions. Woo hoo! I found a problem that programming could solve!
 
 This gave me a chance to exercise my rusty Scala skills and also try to write code in the most functional way possible.
+
+## Building
+
+The project has a standard Scala directory structure. Download a recent version of [SBT](https://www.scala-sbt.org) and in the project directory run:
+
+```bash
+sbt compile
+sbt run
+```
+
+## Details
 
 The program emulates a chain of 27 wooden blocks. The structure of each block is represented by the [Block trait](../master/src/org/kleemann/snakepuzzle/Block.scala).  There are two types of Blocks:
 1. a Straight Block which connects the previous and next block in a linear fashion. There is no choice in positioning a straight block.
