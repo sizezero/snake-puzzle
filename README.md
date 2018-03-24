@@ -17,6 +17,7 @@ The project has a standard Scala directory structure. Download a recent version 
 ```bash
 sbt compile
 sbt run
+sbt doc
 ```
 
 ## Details

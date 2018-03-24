@@ -5,14 +5,12 @@ package org.kleemann.snakepuzzle {
 
     import scala.collection.parallel.immutable.ParSeq
 
-    /**
-     * All complete and valid solutions including duplicate rotated
-     * and symmetrical solutions. If snake is not legal then an error
-     * message in Left is returned.
+    /** @returns all complete and valid solutions including duplicate rotated and symmetrical solutions
      *
-     * parallelDepth instructs the algorithm to perform the depth first search
-     * in parallel until this depth. After this depth, perform it in a
-     * single thread.
+     * If snake is not legal then an error message in Left is returned.
+     *
+     * @param snake the structure of the snake to solve
+     * @parallelDepth instructs the algorithm to perform the depth first search in parallel until this depth. After this depth, perform it in a single thread.
      */
     def solve(snake: List[Block], parallelDepth: Int): Either[String,List[Solution]] = {
 
@@ -45,10 +43,8 @@ package org.kleemann.snakepuzzle {
       }
     }
 
-    /**
-     * Same as solve(snake,parallelDepth) but use a heuristic for the
-     * best guess of parallelDepth.
-     */
+    /** Same as solve(snake,parallelDepth) but use a heuristic for the best guess of parallelDepth.
+      */
     def solve(snake: List[Block]): Either[String,List[Solution]] = {
       /*
        *  On my machine I get these times

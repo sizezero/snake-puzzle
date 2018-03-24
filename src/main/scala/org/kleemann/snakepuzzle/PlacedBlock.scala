@@ -3,17 +3,20 @@ package org.kleemann.snakepuzzle {
 
   import Block.{Straight,RightAngle}
 
-  /**
-   * A PlacedBlock represents a chosen placement of a block in the puzzle snake.
-   * It is a combination of a Block type, a Coordinate in space where the block
-   * was placed and the Direction from the previously placed block to this block.
-   */
+  /** a chosen placement of a block in the puzzle snake
+    *
+    * @param b the structure of the Block that was placed
+    * @param c the Coordinate of the placed block in space
+    * @param d the Direction from the previously placed block to this block
+    */
   case class PlacedBlock(b: Block, c: Coordinate, d: Direction) {
-    /**
-     * Given an existing PlacedBlock, find the coordinate and direction
-     * of all possible placements of the following block.  These positions
-     * may or may not be legal placements
-     */
+    /** @return all possible placements when a new block is added to this block
+      *
+      * @param newBlock the structure of the next PlacedBlock
+      *
+      * These positions are only based on the structure of this
+      * block (Straight or RightAngle) and may or may not be legal placements.
+      */
     def nextPlacements(newBlock: Block): List[PlacedBlock] = {
       // make a list of all directions coming from the previously placed block
       val ds: List[Direction] = b match {
@@ -29,9 +32,8 @@ package org.kleemann.snakepuzzle {
 
   object PlacedBlock {
 
-    /**
-     * arbitrary first placement
-     */
+    /** arbitrary first placement
+      */
     def first(b: Block): PlacedBlock = PlacedBlock(b, Coordinate.origin, Direction.first)
   }
 

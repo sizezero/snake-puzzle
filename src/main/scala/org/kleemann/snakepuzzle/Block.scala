@@ -1,10 +1,8 @@
 
 package org.kleemann.snakepuzzle {
 
-  /**
-   * A single block in the link's chain.
-   * This is the structure of an unplaced block.
-   */
+  /** A single unplaced block in the link's chain.
+    */
   sealed trait Block
 
   object Block {

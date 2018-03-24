@@ -3,30 +3,40 @@ package org.kleemann.snakepuzzle {
 
   object Prune {
 
-    /**
-     * Prune solutions that are the same shape but either rotated or mirrored.
-     * These trivial variants should be considered the same solution.
-     */
+    /** @return unique solutions from the given set of Solutions
+      *
+      * @param ss the list to prune
+      *
+      * Prune solutions that are the same shape but either rotated or mirrored.
+      * These trivial variants should be considered the same solution.
+      */
     def prune(ss: List[Solution]): List[Solution] = {
 
-      // A more compact way of representing a solution for this
-      // function's purposes.
-      // No coordinates, no bounding space: easy to transform and compare.
+      /** a Solution represented as a sequence of Directions
+        *
+        * This is a more compact way of representing a solution for this function's purposes.
+        * No coordinates, no bounding space: easy to transform and compare.
+        */
       type Directions = List[Direction]
 
       def solutionToDirections(s: Solution): Directions = s.pbs.map{ _.d }
 
-      // A Variants is a set of Solutions (represented as Directions) that
-      // are all trivial variations of each other.
-      // This can be a 90 degrees around the startingDirection axis
-      // in all four possible ways. It can also be a mirror image.
-      // There is no single correct solution in a set of variants.
-      // Any one is as good as the other. The rest can be discarded.
+      /** a set of Solutions represented as Directions
+        *
+        * This can be a 90 degrees around the startingDirection axis
+        * in all four possible ways. It can also be a mirror image.
+        * There is no single correct solution in a set of variants.
+        * Any one is as good as the other. The rest can be discarded.
+        */
       type Variants = Set[Directions]
 
-      // given a list of solutions and a function that can turn Directions (a Solution) into
-      // Variants (set of trivially different solutions), return a list of Solutions
-      // that prunes all but one of each variant
+      /** scaladoc thinks these are "unmoored" so I'm removing the "at" signs of the markup
+        *
+        * return a list of Solutions where trivial variants have been removed
+        *
+        * param ss Solutions to prune
+        * param directionsToVariants turns a Solution into a set of trivially different Solutions
+        */
       def removeVariants(ss: List[Solution], directionsToVariants: Directions => Variants): List[Solution] = {
         // create a list of solutions that are pairs of
         // 1) a solution

@@ -9,7 +9,7 @@ object Main extends App {
   import org.kleemann.snakepuzzle.Block.{Straight,RightAngle}
 
   /**
-   * The structure of an unpositioned snake puzzle
+   * The structure of an unpositioned 3x3x3 snake puzzle
    */
   val snake3x3x3 = List[Block](
       Straight,
@@ -40,6 +40,9 @@ object Main extends App {
       Straight,
       Straight)
 
+  /**
+   * The structure of an unpositioned 4x4x4 snake puzzle (Anaconda)
+   */
   val snake4x4x4 = List[Block](
       Straight,
       Straight,
