@@ -11,11 +11,12 @@ package org.kleemann.snakepuzzle {
 
   object Solution {
 
-    /** @return a Solution if the given PartialSolution is complete and valid
-      *
-      * @param p the PartialSolution to test for completeness
+    /** Create a solution from a complete PartialSolution
       *
       * This is the only way to create a Solution
+      *
+      * @param p the PartialSolution to test for completeness
+      * @return a Solution if the given PartialSolution is complete and valid
       */
     def isComplete(p: PartialSolution): Option[Solution] =
       if (p.isComplete) Some(Solution(p.pbs.reverse))

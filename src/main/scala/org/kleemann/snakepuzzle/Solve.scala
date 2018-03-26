@@ -5,13 +5,14 @@ package org.kleemann.snakepuzzle {
 
     import scala.collection.parallel.immutable.ParSeq
 
-    /** @returns all complete and valid solutions including duplicate rotated and symmetrical solutions
-     *
-     * If snake is not legal then an error message in Left is returned.
-     *
-     * @param snake the structure of the snake to solve
-     * @parallelDepth instructs the algorithm to perform the depth first search in parallel until this depth. After this depth, perform it in a single thread.
-     */
+    /** Returns all complete solutions of the given snake
+      *
+      * If snake is not legal then an error message in Left is returned.
+      *
+      * @param snake the structure of the snake to solve
+      * @param parallelDepth instructs the algorithm to perform the depth first search in parallel until this depth. After this depth, perform it in a single thread.
+      * @return all complete and valid solutions including duplicate rotated and symmetrical solutions
+      */
     def solve(snake: List[Block], parallelDepth: Int): Either[String,List[Solution]] = {
 
       // Given a partial solution, perform a recursive depth first search

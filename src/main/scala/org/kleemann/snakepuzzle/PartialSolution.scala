@@ -20,15 +20,15 @@ package org.kleemann.snakepuzzle {
     */
   case class PartialSolution private (
       private val bs: List[Block],
-      pbs: List[PlacedBlock],
+      pbs: List[PlacedBlock], // docs for this are omitted from scaladoc
       private val extent: CubeExtent,
       private val occupiedCoordinates: Set[Coordinate]) {
 
-    /** @return true if the PartialSolution is a complete and valid solution
+    /** Returns true if the PartialSolution is a complete and valid solution
       */
     def isComplete: Boolean = bs == Nil
 
-    /** @return all PartialSolutions that result from placing the next block in all legal ways
+    /** Returns all legal PartialSolutions that result from placing the next block
       *
       * If there are more blocks to be placed then place the next block in
       * all possible orientations and return the resulting valid partial
@@ -36,6 +36,8 @@ package org.kleemann.snakepuzzle {
       *
       * If the partial Solution has been completed then there are no remaining
       * blocks to be placed then no PartialSolutions will be returned.
+      *
+      * @return all PartialSolutions that result from placing the next block in all legal ways
       */
     def nextLegalPlacements: List[PartialSolution] =
       if (isComplete) Nil
@@ -59,12 +61,15 @@ package org.kleemann.snakepuzzle {
 
   object PartialSolution {
 
-    /** @return a partial solution of the first move of the given snake
+    /** given the structure of a snake, produce a Partial Solution by placing the first block
       *
       * It's not possible to make an illegal choice in the first move.
       *
       * If the length of snake is not a perfect cube then the left
       * part of Either contains the error message.
+      *
+      * @param snake a list of blocks to be placed
+      * @return an error message if the length of the snake is not a perfect cube or a PartialSolution with one block placed
       */
     def first(snake: List[Block]): Either[String,PartialSolution] = {
       intCubeRoot(snake.length) match {
@@ -86,14 +91,17 @@ package org.kleemann.snakepuzzle {
       }
     }
 
-    /** @returns the cube root if the argument is a perfect cube
+    /** returns and integer cube root
       *
       * Only checks for the first dozen integer roots. Larger
       * puzzles than this don't exist.
+      *
+      * @param perfectCube an integeer that we expect to be a perfect cube
+      * @returns the cube root if the argument is a perfect cube
+      *
       */
-    private def intCubeRoot(perfectCube: Int): Option[Int] = {
+    private def intCubeRoot(perfectCube: Int): Option[Int] =
       (1 to 12).find{ root => root*root*root == perfectCube }
-    }
   }
 
 }

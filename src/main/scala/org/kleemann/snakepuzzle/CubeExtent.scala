@@ -41,10 +41,11 @@ package org.kleemann.snakepuzzle {
   }
 
   object CubeExtent {
-    /** @return the smallest CubeExtent of a single coordinate.
+    /** Create a minimal CubeExtent
       *
       * @param maxExtent the maximum extent of one edge of the cube (usually 3 or 4)
       * @param c the singular coordinate of this extent: both max and min
+      * @return the smallest CubeExtent of a single coordinate.
       *
       * @todo this should probably return an Either in case maxExtent is less than 1
       */

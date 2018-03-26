@@ -3,12 +3,13 @@ package org.kleemann.snakepuzzle {
 
   object Prune {
 
-    /** @return unique solutions from the given set of Solutions
-      *
-      * @param ss the list to prune
+    /** Remove trivial solutions from a set of solutions
       *
       * Prune solutions that are the same shape but either rotated or mirrored.
       * These trivial variants should be considered the same solution.
+      *
+      * @param ss the list of solutions to prune
+      * @return unique solutions from the given set of solutions
       */
     def prune(ss: List[Solution]): List[Solution] = {
 

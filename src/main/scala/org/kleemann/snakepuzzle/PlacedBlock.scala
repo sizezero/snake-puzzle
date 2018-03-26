@@ -10,12 +10,13 @@ package org.kleemann.snakepuzzle {
     * @param d the Direction from the previously placed block to this block
     */
   case class PlacedBlock(b: Block, c: Coordinate, d: Direction) {
-    /** @return all possible placements when a new block is added to this block
-      *
-      * @param newBlock the structure of the next PlacedBlock
+    /** Given a new Block, return all possible ways it can be placed
       *
       * These positions are only based on the structure of this
       * block (Straight or RightAngle) and may or may not be legal placements.
+      *
+      * @param newBlock the structure of the next PlacedBlock
+      * @return all possible placements when a new block is added to this block
       */
     def nextPlacements(newBlock: Block): List[PlacedBlock] = {
       // make a list of all directions coming from the previously placed block

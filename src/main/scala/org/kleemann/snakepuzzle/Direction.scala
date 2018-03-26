@@ -4,13 +4,14 @@ package org.kleemann.snakepuzzle {
   /** One of the 6 right angle directions that can be traveled in 3d space
     */
   sealed trait Direction {
-    /** @return the Coordinate resulting from moving the givn Coordinate in this Direction
+    /** Create a new Coordinate by moving from a previous one in this Direction
       *
       * @param c the starting Coordinate of the move
+      * @return the Coordinate resulting from moving the given Coordinate in this Direction
       */
     def move(c: Coordinate): Coordinate
 
-    /** @return the four perpendicular right angles to the given direction
+    /** The four perpendicular directions to this Direction
       */
     def rightAngle: List[Direction]
   }
