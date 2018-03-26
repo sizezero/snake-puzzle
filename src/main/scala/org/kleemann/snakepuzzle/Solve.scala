@@ -3,8 +3,6 @@ package org.kleemann.snakepuzzle {
 
   object Solve {
 
-    import scala.collection.parallel.immutable.ParSeq
-
     /** Returns all complete solutions of the given snake
       *
       * If snake is not legal then an error message in Left is returned.
