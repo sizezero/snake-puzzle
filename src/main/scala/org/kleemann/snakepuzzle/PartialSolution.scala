@@ -20,7 +20,7 @@ package org.kleemann.snakepuzzle {
     */
   case class PartialSolution private (
       private val bs: List[Block],
-      pbs: List[PlacedBlock], // docs for this are omitted from scaladoc
+              val pbs: List[PlacedBlock], // docs for this are omitted from scaladoc
       private val extent: CubeExtent,
       private val occupiedCoordinates: Set[Coordinate]) {
 
