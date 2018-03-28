@@ -20,6 +20,10 @@ package org.kleemann.snakepuzzle {
     /** The origin of the coordinate system
       */
     val origin = Coordinate(0, 0, 0)
+
+    /** The arbitrary location of the first placed cube in every puzzle solution
+      */
+    val first = origin
   }
 
 }

@@ -35,7 +35,7 @@ package org.kleemann.snakepuzzle {
 
     /** arbitrary first placement
       */
-    def first(b: Block) = PlacedBlock(b, Coordinate.origin, Direction.first)
+    def first(b: Block) = PlacedBlock(b, Coordinate.first, Direction.first)
   }
 
 }
