@@ -116,6 +116,11 @@ package org.kleemann.snakepuzzle {
       // 3) removeVariants is a higher order function that allows the variant defining behavior
       // to be cleanly separated from the other operations. I'm not sure I would have used a higher
       // order function if Scala didn't have such a clean syntax for passing functions as parameters.
+      //
+      // 4) True scoping allows types and functions to be defined within functions. This can be
+      // nested to any level including examples above that are 3 deep. This gives much finer access
+      // control than the bulky public/private of most OOP languages. It also increases readability as
+      // the use of a defined item is usually closer to its definition.
     }
   }
 }
