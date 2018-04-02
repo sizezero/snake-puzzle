@@ -91,7 +91,7 @@ package org.kleemann.snakepuzzle {
       }
     }
 
-    /** returns and integer cube root
+    /** returns an integer cube root
       *
       * Only checks for the first dozen integer roots. Larger
       * puzzles than this don't exist.
