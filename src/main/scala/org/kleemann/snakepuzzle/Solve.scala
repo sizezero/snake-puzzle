@@ -11,7 +11,7 @@ package org.kleemann.snakepuzzle {
       * @param parallelDepth instructs the algorithm to perform the depth first search in parallel until this depth. After this depth, perform it in a single thread.
       * @return all complete and valid solutions including duplicate rotated and symmetrical solutions
       */
-    def solve(snake: List[Block], parallelDepth: Int): Either[String,List[Solution]] = {
+    def solve(snake: Snake, parallelDepth: Int): List[Solution] = {
 
       // Given a partial solution, perform a recursive depth first search
       // of all remaining arrangements of the snake. Legal solutions are
@@ -34,17 +34,14 @@ package org.kleemann.snakepuzzle {
                 par.flatMap{ recurse(_, depth+1) }.toList
         }
 
-      // Create the starting partial solution with a single placement...
-      PartialSolution.first(snake).map { firstPlacement =>
-        // ...if it is legal (which means the snake is legal) recurse
-        // into the full depth first search
-        recurse(firstPlacement, 0)
-      }
+      // Create the starting partial solution with a single placement
+      // and recurse into the full depth first search
+      recurse(PartialSolution.first(snake), 0)
     }
 
     /** Same as solve(snake,parallelDepth) but use a heuristic for the best guess of parallelDepth.
       */
-    def solve(snake: List[Block]): Either[String,List[Solution]] = {
+    def solve(snake: Snake): List[Solution] = {
       /*
        *  On my machine I get these times
        * Single threaded:
@@ -65,7 +62,7 @@ package org.kleemann.snakepuzzle {
        * remaining snake length to solve serially.  This will be at maxDepth 24 for
        * 4x4x4 which gives us a value of 40.
        */
-      solve(snake, snake.length - 40)
+      solve(snake, snake.bs.length - 40)
     }
 
   }

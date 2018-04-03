@@ -8,11 +8,11 @@ package object snakepuzzle {
 
   /** Redirects to [[org.kleemann.snakepuzzle.Solve]]
     */
-  def solve(snake: List[Block], parallelDepth: Int) = Solve.solve(snake, parallelDepth: Int)
+  def solve(snake: Snake, parallelDepth: Int) = Solve.solve(snake, parallelDepth: Int)
 
   /** Redirects to [[org.kleemann.snakepuzzle.Solve]]
     */
-  def solve(snake: List[Block]) = Solve.solve(snake)
+  def solve(snake: Snake) = Solve.solve(snake)
 
   /** Redirects to [[org.kleemann.snakepuzzle.Prune#prune]]
     */

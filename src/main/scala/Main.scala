@@ -5,7 +5,7 @@
  * https://mypuzzles.wordpress.com/solution-the-snake-cube/
  */
 object Main extends App {
-  import org.kleemann.snakepuzzle.{Block,Solution,solve,prune}
+  import org.kleemann.snakepuzzle.{Block,Solution,solve,prune,Snake}
   import org.kleemann.snakepuzzle.Block.{Straight,RightAngle}
 
   /**
@@ -119,29 +119,25 @@ object Main extends App {
     }
   }
 
-  def printRun(msg: String, snake: List[Block]) {
+  def printRun(msg: String, snake: Snake) {
     val banner = "=" * 20
     println(banner + msg + banner)
     println
-    solve(snake) match {
-      case Left(msg) => println(msg)
-      case Right(ss) => {
-        println("All Solutions\n")
-        printSolutions(ss)
+    val ss = solve(snake)
+    println("All Solutions\n")
+    printSolutions(ss)
 
-        println("Pruned Solutions\n")
-        printSolutions(prune(ss))
-      }
-    }
+    println("Pruned Solutions\n")
+    printSolutions(prune(ss))
   }
 
-  def timeTrial {
+  def timeTrial(snake: Snake) {
     import java.util.Calendar
     import java.util.concurrent.TimeUnit
 
     (0 to 64).foreach { i =>
       val start = Calendar.getInstance.getTimeInMillis()
-      solve(snake4x4x4, i) // throw away the result; we're just timing
+      solve(snake, i) // throw away the result; we're just timing
       val end = Calendar.getInstance.getTimeInMillis()
       val duration = end - start
       val hours: Double = duration / (1000.0 * 60)
@@ -149,8 +145,16 @@ object Main extends App {
     }
   }
 
-  printRun("3x3x3", snake3x3x3)
+  // error handling for turning a list of blocks into a snake
+  def blocksToSnake(bs: List[Block], fn: Snake => Unit) {
+    Snake(bs) match {
+      case Left(msg) => println(msg)
+      case Right(snake) => fn(snake)
+    }
+  }
+
+  blocksToSnake(snake3x3x3, { printRun("3x3x3", _) } )
 
   // 4x4x4 puzzle takes around 3 minutes
-  printRun("4x4x4", snake4x4x4)
+  blocksToSnake(snake4x4x4, { printRun("4x4x4", _) } )
 }

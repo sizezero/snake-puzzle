@@ -71,37 +71,18 @@ package org.kleemann.snakepuzzle {
       * @param snake a list of blocks to be placed
       * @return an error message if the length of the snake is not a perfect cube or a PartialSolution with one block placed
       */
-    def first(snake: List[Block]): Either[String,PartialSolution] = {
-      intCubeRoot(snake.length) match {
-        case Some(root) => {
+    def first(snake: Snake): PartialSolution = {
           // The cube root of the snake length is equal to the length of
           // each side of the resulting cube. This is the maximum
           // extent of the bounding box of a legal solution (the snake
           // must be arranged into a cube of these dimensions)
-          val maxExtent = root
-          val pb = PlacedBlock.first(snake.head)
-          Right(
-            PartialSolution(
-              snake.tail,
-              List(pb),
-              CubeExtent.firstPlacement(maxExtent, pb.c),
-              Set(pb.c)))
-        }
-        case None => Left("length of snake is not a perfect cube: "+snake.length)
+          val maxExtent = snake.root
+          val pb = PlacedBlock.first(snake.bs.head)
+          PartialSolution(
+            snake.bs.tail,
+            List(pb),
+            CubeExtent.firstPlacement(maxExtent, pb.c),
+            Set(pb.c))
       }
     }
-
-    /** returns an integer cube root
-      *
-      * Only checks for the first dozen integer roots. Larger
-      * puzzles than this don't exist.
-      *
-      * @param perfectCube an integeer that we expect to be a perfect cube
-      * @returns the cube root if the argument is a perfect cube
-      *
-      */
-    private def intCubeRoot(perfectCube: Int): Option[Int] =
-      (1 to 12).find{ root => root*root*root == perfectCube }
-  }
-
 }
