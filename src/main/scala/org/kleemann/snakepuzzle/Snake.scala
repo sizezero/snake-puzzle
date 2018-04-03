@@ -4,6 +4,7 @@ package org.kleemann.snakepuzzle {
   /** the structure of a snake before any block is placed
     *
     * @param bs the list of blocks that comprise the snake
+    * @param root the perfect cube root of the length of the snake
     */
   case class Snake private(bs: List[Block], root: Int)
 
@@ -20,7 +21,7 @@ package org.kleemann.snakepuzzle {
       * Only checks for the first dozen integer roots. Larger
       * puzzles than this don't exist.
       *
-      * @param perfectCube an integeer that we expect to be a perfect cube
+      * @param perfectCube an integer that we expect to be a perfect cube
       * @returns the cube root if the argument is a perfect cube
       *
       */

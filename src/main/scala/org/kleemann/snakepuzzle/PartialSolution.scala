@@ -65,11 +65,8 @@ package org.kleemann.snakepuzzle {
       *
       * It's not possible to make an illegal choice in the first move.
       *
-      * If the length of snake is not a perfect cube then the left
-      * part of Either contains the error message.
-      *
       * @param snake a list of blocks to be placed
-      * @return an error message if the length of the snake is not a perfect cube or a PartialSolution with one block placed
+      * @return a PartialSolution with one block placed
       */
     def first(snake: Snake): PartialSolution = {
           // The cube root of the snake length is equal to the length of
