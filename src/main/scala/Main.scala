@@ -109,17 +109,18 @@ object Main extends App {
       RightAngle,
       Straight)
 
-  def printSolutions(ss: List[Solution]) {
-    // the functional way to iterate with an index
-    ss.toStream.zipWithIndex.foreach{ case (s, zeroBased) =>
-      val oneBased = zeroBased + 1
-      println("solution #"+oneBased)
-      println(s.toString)
-      println
-    }
-  }
-
   def printRun(msg: String, snake: Snake) {
+
+    def printSolutions(ss: List[Solution]) {
+      // the functional way to iterate with an index
+      ss.toStream.zipWithIndex.foreach{ case (s, zeroBased) =>
+        val oneBased = zeroBased + 1
+        println("solution #"+oneBased)
+        println(s.toString)
+        println
+      }
+    }
+
     val banner = "=" * 20
     println(banner + msg + banner)
     println
